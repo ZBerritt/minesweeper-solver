@@ -1,4 +1,4 @@
-from Board import Board
+from board import Board
 
 
 def main():
