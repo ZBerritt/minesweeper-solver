@@ -2,7 +2,7 @@ from board import Board
 
 
 def main():
-    board = Board(20, 20, 100)
+    board = Board(10, 10, 10)
     board.print_board()
 
 
