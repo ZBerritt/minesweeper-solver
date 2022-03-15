@@ -8,7 +8,8 @@ class Board:
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
         self.number_of_mines = number_of_mines
-        self.board = [[None]*horizontal_tiles]*vertical_tiles
+
+        self.board = [[Tile(None, 0, 0)] * horizontal_tiles] * vertical_tiles
         self.populated = False
 
     def populate_board(self):
@@ -48,5 +49,16 @@ class Board:
         return self.get_space(x, y)
 
 
-
-
+class Tile:
+    def __init__(self, value, x, y):
+        """
+        Values:
+        None: Undiscovered
+        -1: Flagged Mine
+        0: Empty tile
+        1-8: Numbered tile
+        """
+        self.value = value
+        self.solved = False
+        self.x_pos = x
+        self.y_pos = y
