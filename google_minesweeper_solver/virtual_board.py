@@ -5,14 +5,13 @@ import math
 class Board:
 
     def __init__(self, horizontal_tiles, vertical_tiles, number_of_mines):
+        self.board = None
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
         self.number_of_mines = number_of_mines
 
-        self.board = [[Tile(None, 0, 0)] * horizontal_tiles] * vertical_tiles
-        self.populated = False
-
-    def populate_board(self):
+    def populate_board(self, board):
+        self.board = board
         pass
 
     def print_board(self):
@@ -23,9 +22,12 @@ class Board:
             for i in range(1 + self.horizontal_tiles * 4):
                 string += "-"
             string += "\n|"
-            for point in row:
+            for tile in row:
+                point = tile.value
                 if point == 0:
                     char = " "
+                elif point == -1:
+                    char = "f"
                 elif point is None:
                     char = "*"
                 else:
@@ -50,7 +52,7 @@ class Board:
 
 
 class Tile:
-    def __init__(self, value, x, y):
+    def __init__(self, value, num, color):
         """
         Values:
         None: Undiscovered
@@ -60,5 +62,5 @@ class Tile:
         """
         self.value = value
         self.solved = False
-        self.x_pos = x
-        self.y_pos = y
+        self.number = num
+        self.color = color  # Used only to map the squares
