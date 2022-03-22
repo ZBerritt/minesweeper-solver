@@ -20,6 +20,27 @@ class Board:
 
     def get_space(self, x, y):
         return self.board[y][x]
+    
+    def get_surrounding_tiles(self, x, y):
+        tiles = []
+        if x != 0 and y != 0:
+            tiles.append((x - 1, y - 1)) # Above-Left
+        if y != 0:
+            tiles.append((x, y - 1)) # Above
+        if x != self.horizontal_tiles - 1 and y != 0:
+            tiles.append((x + 1, y - 1)) # Above-Right
+        if x != self.horizontal_tiles - 1:
+            tiles.append((x + 1, y)) # Right
+        if x != self.horizontal_tiles - 1 and y != self.vertical_tiles - 1:
+            tiles.append((x + 1, y + 1)) # Bottom-Right
+        if y != self.vertical_tiles - 1:
+            tiles.append((x, y + 1)) # Bottom
+        if x != 0 and y != self.vertical_tiles - 1:
+            tiles.append((x - 1, y + 1)) # Bottom-Left
+        if x != 0:
+            tiles.append((x - 1, y)) # Left
+        return tiles
+    
 
 
 class Tile:
