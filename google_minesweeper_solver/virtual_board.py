@@ -59,7 +59,10 @@ class Board:
                     solved = False
                     break
             tile.solved = solved
-    
+            
+    def get_border_tiles(self):
+        # TODO - Bell is about to ring
+        pass
 
 
 class Tile:
