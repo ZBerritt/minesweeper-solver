@@ -66,8 +66,8 @@ class Board:
             tile.solved = solved
 
     def get_border_tiles(self):
-        # TODO - Bell is about to ring
-        pass
+        return [t for t in self.get_unsolved_tiles()
+                if len([tl for tl in self.get_surrounding_tiles(t[0], t[1]) if tl[1].value is not None]) > 0]
 
 
 class Tile:
