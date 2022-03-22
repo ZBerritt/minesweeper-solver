@@ -41,6 +41,14 @@ class Board:
             tiles.append((x - 1, y)) # Left
         return tiles
     
+    def get_unsolved_tiles(self):
+        tiles = []
+        for row in self.board:
+            for tile in row:
+                if not tile.solved:
+                    tiles.append((x, y, tile))
+        return tiles
+    
 
 
 class Tile:
