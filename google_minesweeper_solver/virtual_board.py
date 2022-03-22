@@ -49,6 +49,17 @@ class Board:
                     tiles.append((x, y, tile))
         return tiles
     
+    def solve_tiles(self):
+        unsolved_tiles = self.get_unsolved_tiles()
+        for tile in unsolved_tiles:
+            solved = True
+            adj_tiles = self.get_surrounding_tiles()
+            for adj_tile in adj_tiles:
+                if adj_tile.value is None:
+                    solved = False
+                    break
+            tile.solved = solved
+    
 
 
 class Tile:
