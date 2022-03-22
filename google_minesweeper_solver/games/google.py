@@ -1,6 +1,6 @@
 import pyautogui
 
-from google_minesweeper_solver.virtual_board import Tile
+from google_minesweeper_solver import virtual_board
 from google_minesweeper_solver.util import near_same_color
 
 
@@ -45,6 +45,10 @@ class GoogleBoard:
         self.dimensions = board_dimensions
         self.box_dimensions = box_dimensions
 
+        # Get virtual board
+        self.virtual_board = virtual_board.Board(self.boxes_horizontal(), self.boxes_vertical())
+        self.virtual_board.populate_board(self.get_tile_values())
+
     def boxes_horizontal(self):
         return int(self.dimensions[0] / self.box_dimensions[0])
 
@@ -69,7 +73,7 @@ class GoogleBoard:
         bottom_y = top_y + self.box_dimensions[1] - 1
         return [[left_x, right_x], [top_y, bottom_y]]
 
-    # TODO - The value recognition by color is completely busted
+    # TODO - The value recognition by color is completely busted AND slow as balls
     def tile_value(self, x, y):
         screen = pyautogui.screenshot()
         positions = self.tile_range(x, y)
@@ -87,6 +91,17 @@ class GoogleBoard:
                 elif near_same_color(pixel, google_colors["two"], 10):
                     return 3
         return 0
+
+    # Pretty slow, maybe need to start combining stuff
+    def get_tile_values(self):
+        values = []
+        row_num = -1
+        for y in range(0, self.boxes_horizontal() - 1):
+            row_num += 1
+            values.append([])
+            for x in range(0, self.boxes_vertical() - 1):
+                values[row_num].append(self.tile_value(x, y))
+        return values
 
 
 google_colors = {

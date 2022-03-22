@@ -14,7 +14,7 @@ class Board:
         row_num = -1
         for row in values:
             row_num += 1
-            self.board[row_num] = []
+            self.board.append([])
             for value in row:
                 self.board[row_num].append(Tile(value))
 
