@@ -44,19 +44,15 @@ class GoogleBoard:
         self.top_left = top_left
         self.dimensions = board_dimensions
         self.box_dimensions = box_dimensions
+        self.boxes_horizontal = int(self.dimensions[0] / self.box_dimensions[0])
+        self.boxes_vertical = int(self.dimensions[1] / self.box_dimensions[1])
 
         # Get virtual board
-        self.virtual_board = virtual_board.Board(self.boxes_horizontal(), self.boxes_vertical())
+        self.virtual_board = virtual_board.Board(self.boxes_horizontal, self.boxes_vertical)
         self.virtual_board.populate_board(self.get_tile_values())
 
-    def boxes_horizontal(self):
-        return int(self.dimensions[0] / self.box_dimensions[0])
-
-    def boxes_vertical(self):
-        return int(self.dimensions[1] / self.box_dimensions[1])
-
     def box_count(self):
-        return self.boxes_vertical() * self.boxes_horizontal()
+        return self.boxes_vertical * self.boxes_horizontal
 
     def get_mouse_position(self, x, y):  # x and y are defined over the board, not the screen (box 1 is {0, 0])
         # Get the position of the box
@@ -78,28 +74,29 @@ class GoogleBoard:
         screen = pyautogui.screenshot()
         positions = self.tile_range(x, y)
 
-        for y in range(positions[1][0], positions[1][1]):
-            for x in range(positions[0][0], positions[0][1]):
-                pixel = screen.getpixel((x, y))
-                if near_same_color(pixel, google_colors["light_empty"]) or near_same_color(pixel,
-                                                                                           google_colors["dark_empty"]):
-                    return None
-                elif near_same_color(pixel, google_colors["one"], 10):
+        for y_pos in range(positions[1][0], positions[1][1]):
+            for x_pos in range(positions[0][0], positions[0][1]):
+                pixel = screen.getpixel((x_pos, y_pos))
+                if near_same_color(pixel, google_colors["one"], 10):
                     return 1
-                elif near_same_color(pixel, google_colors["three"], 10):
-                    return 2
                 elif near_same_color(pixel, google_colors["two"], 10):
+                    return 2
+                elif near_same_color(pixel, google_colors["three"], 10):
                     return 3
+        tr_pixel = screen.getpixel((positions[0][0], positions[1][0]))
+        if near_same_color(tr_pixel, google_colors["light_empty"]) or near_same_color(tr_pixel,
+                                                                                      google_colors["dark_empty"]):
+            return None
         return 0
 
     # Pretty slow, maybe need to start combining stuff
     def get_tile_values(self):
         values = []
         row_num = -1
-        for y in range(0, self.boxes_horizontal() - 1):
+        for y in range(0, self.boxes_vertical):
             row_num += 1
             values.append([])
-            for x in range(0, self.boxes_vertical() - 1):
+            for x in range(0, self.boxes_horizontal):
                 values[row_num].append(self.tile_value(x, y))
         return values
 
