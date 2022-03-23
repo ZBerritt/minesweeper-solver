@@ -85,9 +85,9 @@ class GoogleBoard:
                     return 2
                 elif near_same_color(pixel, google_colors["three"], 10):
                     return 3
-        tr_pixel = screen.getpixel((positions[0][0], positions[1][0]))
-        if near_same_color(tr_pixel, google_colors["light_empty"]) or near_same_color(tr_pixel,
-                                                                                      google_colors["dark_empty"]):
+        mid_pixel = screen.getpixel(self.get_mouse_position(x, y))
+        if near_same_color(mid_pixel, google_colors["light_empty"]) or near_same_color(mid_pixel,
+                                                                                       google_colors["dark_empty"]):
             return None
         return 0
 
