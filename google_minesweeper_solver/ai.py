@@ -16,7 +16,7 @@ def get_next_move(board):
         if chance_of_mine == 1:
             return Move(unrevealed_surrounding[0][0], unrevealed_surrounding[0][1], 0)
         elif chance_of_mine == 0:
-            return Move(tile[0], tile[1], 0)
+            return Move(unrevealed_surrounding[0][0], unrevealed_surrounding[0][1], 1)
 
     # All else fails, random shot in the dark
     return Move(random.randrange(0, board.horizontal_tiles - 1), random.randrange(0, board.vertical_tiles), 1)

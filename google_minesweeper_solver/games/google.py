@@ -77,7 +77,9 @@ class GoogleBoard:
         for y_pos in range(positions[1][0], positions[1][1]):
             for x_pos in range(positions[0][0], positions[0][1]):
                 pixel = screen.getpixel((x_pos, y_pos))
-                if near_same_color(pixel, google_colors["one"], 10):
+                if near_same_color(pixel, google_colors["flag"], 10):
+                    return -1
+                elif near_same_color(pixel, google_colors["one"], 10):
                     return 1
                 elif near_same_color(pixel, google_colors["two"], 10):
                     return 2
