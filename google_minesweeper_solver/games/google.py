@@ -44,7 +44,7 @@ def get_board():
     
     # Make sure to add + 1 because subtracting the 2 gives the distance rather than the total dimensions
     board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
-    box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1])
+    box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
     return GoogleBoard(top_left, board_dimensions, box_dimensions)
             
                                 
