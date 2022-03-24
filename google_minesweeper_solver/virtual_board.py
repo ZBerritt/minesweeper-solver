@@ -1,11 +1,10 @@
 # Virtual minesweeper board derived from the browser for simulating and calculations
-import math
 
 
 class Board:
 
     def __init__(self, horizontal_tiles, vertical_tiles):
-        self.board = [[Tile(None)] * horizontal_tiles] * vertical_tiles # Generates empty board
+        self.board = [[Tile(None)] * horizontal_tiles] * vertical_tiles  # Generates empty board
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
 
@@ -21,9 +20,9 @@ class Board:
 
     def get_space(self, x, y):
         return self.board[y][x]
-    
+
     def set_value(self, x, y, value):
-        self.board[y][x] = value # Sets a new value without redeclaring the tile
+        self.board[y][x] = value  # Sets a new value without re-declaring the tile
 
     def get_surrounding_tiles(self, x, y):
         tiles = []
@@ -57,7 +56,7 @@ class Board:
                 if not tile.solved:
                     tiles.append((x, y, tile))
         return tiles
-    
+
     # Undiscovered, not empty
     def get_empty_tiles(self):
         tiles = []
@@ -103,6 +102,7 @@ class Board:
         surrounding = self.get_surrounding_tiles(x, y)
         return tile.value - len([m for m in surrounding if m[2].value == -1])
 
+
 # TODO - Maybe add x and y attributes
 class Tile:
     def __init__(self, value):
@@ -114,4 +114,4 @@ class Tile:
         1-8: Numbered tile
         """
         self.value = value
-        self.solved = False # True if all surrounding squares have a value other than None (discovered/flagged)
+        self.solved = False  # True if all surrounding squares have a value other than None (discovered/flagged)

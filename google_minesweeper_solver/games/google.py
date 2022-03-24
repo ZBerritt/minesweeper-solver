@@ -13,7 +13,7 @@ def get_board():
     for y in range(im.height):
         if bottom_right:
             break
-          
+
         if not top_left:
             for x in range(im.width):
                 pixel = im.getpixel((x, y))
@@ -22,33 +22,34 @@ def get_board():
                     break
         elif not box_one_bottom_right:
             pixel = im.getpixel((top_left[0], y))
-            if near_same_color(pixel, google_colors["dark_empty"]): # Next box has started
-                for x in range(top_left[0], im.width): # Skip any x value to the left of the board
+            if near_same_color(pixel, google_colors["dark_empty"]):  # Next box has started
+                for x in range(top_left[0], im.width):  # Skip any x value to the left of the board
                     pixel = im.getpixel((x, y))
-                    if near_same_color(pixel, google_colors["light_empty"]): # Box down and right top left
-                    box_one_bottom_right = (x, y)
-                    break
+                    if near_same_color(pixel, google_colors["light_empty"]):  # Box down and right top left
+                        box_one_bottom_right = (x, y)
+                        break
             if box_one_bottom_right is None:
                 return None
         else:
             pixel = im.getpixel((top_left[0], y))
-            if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors["dark_empty"]):
+            if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
+                    "dark_empty"]):
                 # Bottom of the board is found, need to find bottom right now
                 for x in range(top_left[0], im.width):
                     pixel = im.getpixel((x, y - 1))
-                    if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors["dark_empty"]):
+                    if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel,
+                                                                                                        google_colors[
+                                                                                                            "dark_empty"]):
                         # Found the left edge on the bottom most pixel
                         bottom_right = (x - 1, y - 1)
     if not bottom_right:
         return None
-    
+
     # Make sure to add + 1 because subtracting the 2 gives the distance rather than the total dimensions
     board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
     box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
     return GoogleBoard(top_left, board_dimensions, box_dimensions)
-            
-                                
-    
+
 
 # Old slow function - needs comparison to new cooler awesomer and epicer function
 def get_board_old():
