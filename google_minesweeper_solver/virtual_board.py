@@ -23,7 +23,7 @@ class Board:
         return self.board[y][x]
     
     def set_value(self, x, y, value):
-        self.board[y][x] = values # Sets a new value without redeclaring the tile
+        self.board[y][x] = value # Sets a new value without redeclaring the tile
 
     def get_surrounding_tiles(self, x, y):
         tiles = []
