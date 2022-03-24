@@ -3,14 +3,22 @@ import time
 import pyautogui
 
 from google_minesweeper_solver import ai
-from google_minesweeper_solver.games.google import get_board
+from google_minesweeper_solver.games.google import get_board, get_board_old
 
 
 def main():
-    board = get_board()
-    if board is None:
-        return print("No board could be found!")
-    do_move(board)
+    start1 = time.time()
+    board_awesome = get_board()
+    start2 = time.time()
+    board_worse = get_board_old()
+    done = time.time()
+    better_time = start2 - start1
+    worse_time = done - start2
+    print("Better time: {}\nWorse time: {}".format(better_time, worse_time))
+    print("done")
+    # if board is None:
+    #     return print("No board could be found!")
+    # do_move(board)
 
 
 def do_move(board):

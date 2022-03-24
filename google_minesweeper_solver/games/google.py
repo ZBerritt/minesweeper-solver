@@ -25,11 +25,11 @@ def get_board():
             if near_same_color(pixel, google_colors["dark_empty"]):  # Next box has started
                 for x in range(top_left[0], im.width):  # Skip any x value to the left of the board
                     pixel = im.getpixel((x, y))
-                    if near_same_color(pixel, google_colors["light_empty"]):  # Box down and right top left
-                        box_one_bottom_right = (x, y)
+                    if near_same_color(pixel, google_colors["light_empty"]):  # Box down and right to top left
+                        box_one_bottom_right = (x - 1, y - 1)
                         break
-            if box_one_bottom_right is None:
-                return None
+                if box_one_bottom_right is None:
+                    return None
         else:
             pixel = im.getpixel((top_left[0], y))
             if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
@@ -42,6 +42,7 @@ def get_board():
                                                                                                             "dark_empty"]):
                         # Found the left edge on the bottom most pixel
                         bottom_right = (x - 1, y - 1)
+                        break
     if not bottom_right:
         return None
 
