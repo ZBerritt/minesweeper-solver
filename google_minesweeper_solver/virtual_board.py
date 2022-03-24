@@ -5,10 +5,11 @@ import math
 class Board:
 
     def __init__(self, horizontal_tiles, vertical_tiles):
-        self.board = None
+        self.board = [[Tile(None)] * horizontal_tiles] * vertical_tiles # Generates empty board
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
 
+    # TODO - Should get rid of this function since its too slow and just use set_value
     def populate_board(self, values):
         self.board = []
         row_num = -1
@@ -20,6 +21,9 @@ class Board:
 
     def get_space(self, x, y):
         return self.board[y][x]
+    
+    def set_value(self, x, y, value):
+        self.board[y][x] = values # Sets a new value without redeclaring the tile
 
     def get_surrounding_tiles(self, x, y):
         tiles = []
@@ -53,7 +57,8 @@ class Board:
                 if not tile.solved:
                     tiles.append((x, y, tile))
         return tiles
-
+    
+    # Undiscovered, not empty
     def get_empty_tiles(self):
         tiles = []
         for y in range(0, self.vertical_tiles):
@@ -74,6 +79,8 @@ class Board:
                     break
             tile[2].solved = solved
 
+    # Tiles that border any undiscovered tile. 
+    # TODO - Might need another function to get undiscovered tiles that border numbered tiles
     def get_border_tiles(self):
         tiles = []
         unsolved = self.get_unsolved_tiles()
@@ -96,7 +103,7 @@ class Board:
         surrounding = self.get_surrounding_tiles(x, y)
         return tile.value - len([m for m in surrounding if m[2].value == -1])
 
-
+# TODO - Maybe add x and y attributes
 class Tile:
     def __init__(self, value):
         """
@@ -107,4 +114,4 @@ class Tile:
         1-8: Numbered tile
         """
         self.value = value
-        self.solved = False
+        self.solved = False # True if all surrounding squares have a value other than None (discovered/flagged)
