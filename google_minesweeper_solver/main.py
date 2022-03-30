@@ -3,14 +3,7 @@ import time
 import pyautogui
 
 from google_minesweeper_solver import ai
-from google_minesweeper_solver.games.google import get_board, get_board_old
-
-
-def main():
-    board = get_board()
-    if board is None:
-        return print("No board could be found!")
-    do_move(board)
+from google_minesweeper_solver.games.google import get_board
 
 
 def do_move(board):
@@ -23,7 +16,7 @@ def do_move(board):
         action_name = "Flag"
     elif move.action == 1:
         action_name = "Click"
-    print("({}, {}) - {}".format(move.x, move.y, move.action))
+    print("({}, {}) - {}".format(move.x, move.y, action_name))
     if move.action == 0:
         pyautogui.click(button="right")
         virtual_board.get_space(move.x, move.y).value = -1  # Change the value to a mine, no need to rescan
@@ -36,4 +29,8 @@ def do_move(board):
 
 
 if __name__ == "__main__":
-    main()
+    google_board = get_board()
+    if google_board is None:
+        print("No board could be found! Make sure the app is all on screen.")
+    else:
+        do_move(google_board)

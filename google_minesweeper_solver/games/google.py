@@ -35,7 +35,7 @@ def get_board():
         else:
             pixel = im.getpixel((top_left[0], y))
             if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
-                    "dark_empty"]):
+                "dark_empty"]):
                 # Bottom of the board is found, need to find bottom right now
                 for x in range(top_left[0], im.width):
                     pixel = im.getpixel((x, y - 1))
@@ -144,13 +144,14 @@ class GoogleBoard:
         screen = pyautogui.screenshot()
         for y in range(self.boxes_vertical):
             for x in range(self.boxes_horizontal):
-                self.virtual_board.set_value(x, y, self.tile_value(x, y, screen))
+                value = self.tile_value(x, y, screen)
+                self.virtual_board.set_value(x, y, value)
 
 
 google_colors = {
     "light_empty": (170, 215, 81),
     "dark_empty": (162, 209, 73),
-    "light_open": (224, 195, 163,),
+    "light_open": (224, 195, 163),
     "dark_open": (211, 185, 157),
     "border": (126, 164, 53),
     "flag": (242, 54, 7),

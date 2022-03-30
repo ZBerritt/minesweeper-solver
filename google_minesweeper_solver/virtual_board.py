@@ -18,7 +18,7 @@ class Board:
         return self.board[y][x]
 
     def set_value(self, x, y, value):
-        self.board[y][x].value = value  # Sets a new value without re-declaring the tile
+        self.board[y][x].set_value(value)  # Sets a new value without re-declaring the tile
 
     def get_surrounding_tiles(self, x, y):
         tiles = []
@@ -107,3 +107,6 @@ class Tile:
         """
         self.value = value
         self.solved = False  # True if all surrounding squares have a value other than None (discovered/flagged)
+
+    def set_value(self, value):
+        self.value = value
