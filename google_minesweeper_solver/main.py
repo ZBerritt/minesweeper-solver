@@ -3,7 +3,7 @@ import time
 import pyautogui
 
 from google_minesweeper_solver import ai
-from google_minesweeper_solver.games.google import get_board
+from google_minesweeper_solver.games.google import get_board, get_board_old
 
 
 def main():
@@ -30,8 +30,8 @@ def do_move(board):
     elif move.action == 1:
         pyautogui.click(button="left")
         pyautogui.moveTo(1, 1)
-        virtual_board.populate_board(board.get_tile_values())
-    time.sleep(.5)
+        time.sleep(.25)
+        board.update()
     do_move(board)
 
 

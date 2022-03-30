@@ -1,3 +1,5 @@
+import time
+
 import pyautogui
 
 from google_minesweeper_solver import virtual_board
@@ -6,6 +8,54 @@ from google_minesweeper_solver.util import near_same_color
 
 # TODO - Get board that's partially complete
 def get_board():
+    im = pyautogui.screenshot()
+    top_left = None
+    box_one_bottom_right = None
+    bottom_right = None
+    for y in range(im.height):
+        if bottom_right:
+            break
+
+        if not top_left:
+            for x in range(im.width):
+                pixel = im.getpixel((x, y))
+                if not top_left and near_same_color(pixel, google_colors["light_empty"]):  # Top right of the board
+                    top_left = (x, y)
+                    break
+        elif not box_one_bottom_right:
+            pixel = im.getpixel((top_left[0], y))
+            if near_same_color(pixel, google_colors["dark_empty"]):  # Next box has started
+                for x in range(top_left[0], im.width):  # Skip any x value to the left of the board
+                    pixel = im.getpixel((x, y))
+                    if near_same_color(pixel, google_colors["light_empty"]):  # Box down and right to top left
+                        box_one_bottom_right = (x - 1, y - 1)
+                        break
+                if box_one_bottom_right is None:
+                    return None
+        else:
+            pixel = im.getpixel((top_left[0], y))
+            if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
+                    "dark_empty"]):
+                # Bottom of the board is found, need to find bottom right now
+                for x in range(top_left[0], im.width):
+                    pixel = im.getpixel((x, y - 1))
+                    if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel,
+                                                                                                        google_colors[
+                                                                                                            "dark_empty"]):
+                        # Found the left edge on the bottom most pixel
+                        bottom_right = (x - 1, y - 1)
+                        break
+    if not bottom_right:
+        return None
+
+    # Make sure to add + 1 because subtracting the 2 gives the distance rather than the total dimensions
+    board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
+    box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
+    return GoogleBoard(top_left, board_dimensions, box_dimensions)
+
+
+# Old slow function - needs comparison to new cooler awesomer and epicer function
+def get_board_old():
     im = pyautogui.screenshot()
     top_left = None
     bottom_right = None
@@ -49,7 +99,7 @@ class GoogleBoard:
 
         # Get virtual board
         self.virtual_board = virtual_board.Board(self.boxes_horizontal, self.boxes_vertical)
-        self.virtual_board.populate_board(self.get_tile_values())
+        self.update()
 
     def box_count(self):
         return self.boxes_vertical * self.boxes_horizontal
@@ -70,8 +120,7 @@ class GoogleBoard:
         return [[left_x, right_x], [top_y, bottom_y]]
 
     # TODO - The value recognition by color is completely busted AND slow as balls
-    def tile_value(self, x, y):
-        screen = pyautogui.screenshot()
+    def tile_value(self, x, y, screen):
         positions = self.tile_range(x, y)
 
         for y_pos in range(positions[1][0], positions[1][1]):
@@ -91,16 +140,11 @@ class GoogleBoard:
             return None
         return 0
 
-    # Pretty slow, maybe need to start combining stuff
-    def get_tile_values(self):
-        values = []
-        row_num = -1
-        for y in range(0, self.boxes_vertical):
-            row_num += 1
-            values.append([])
-            for x in range(0, self.boxes_horizontal):
-                values[row_num].append(self.tile_value(x, y))
-        return values
+    def update(self):
+        screen = pyautogui.screenshot()
+        for y in range(self.boxes_vertical):
+            for x in range(self.boxes_horizontal):
+                self.virtual_board.set_value(x, y, self.tile_value(x, y, screen))
 
 
 google_colors = {
