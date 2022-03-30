@@ -1,10 +1,4 @@
 def near_same_color(color, target, tolerance=5):
-    cr = color[0]
-    tr = target[0]
-    cg = color[1]
-    tg = target[1]
-    cb = color[2]
-    tb = target[2]
-    return abs(cr - tr) <= tolerance \
-        and abs(cg - tg) <= tolerance \
-        and abs(cb - tb) <= tolerance
+    return abs(color[0] - target[0]) <= tolerance \
+        and abs(color[1] - target[1]) <= tolerance \
+        and abs(color[2] - target[2]) <= tolerance

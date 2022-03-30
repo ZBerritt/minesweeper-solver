@@ -1,3 +1,5 @@
+import time
+
 import pyautogui
 
 from google_minesweeper_solver import virtual_board
@@ -97,7 +99,10 @@ class GoogleBoard:
 
         # Get virtual board
         self.virtual_board = virtual_board.Board(self.boxes_horizontal, self.boxes_vertical)
-        self.virtual_board.populate_board(self.get_tile_values())
+        screen = pyautogui.screenshot()
+        for y in range(self.boxes_vertical):
+            for x in range(self.boxes_horizontal):
+                self.virtual_board.set_value(x, y, self.tile_value(x, y, screen))
 
     def box_count(self):
         return self.boxes_vertical * self.boxes_horizontal
@@ -118,8 +123,7 @@ class GoogleBoard:
         return [[left_x, right_x], [top_y, bottom_y]]
 
     # TODO - The value recognition by color is completely busted AND slow as balls
-    def tile_value(self, x, y):
-        screen = pyautogui.screenshot()
+    def tile_value(self, x, y, screen):
         positions = self.tile_range(x, y)
 
         for y_pos in range(positions[1][0], positions[1][1]):

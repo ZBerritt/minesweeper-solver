@@ -8,15 +8,11 @@ class Board:
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
 
-    # TODO - Should get rid of this function since its too slow and just use set_value
     def populate_board(self, values):
-        self.board = []
-        row_num = -1
-        for row in values:
-            row_num += 1
-            self.board.append([])
-            for value in row:
-                self.board[row_num].append(Tile(value))
+        for y in range(len(values)):
+            for x in range(len(values[y])):
+                value = values[y][x]
+                self.set_value(x, y, Tile(value))
 
     def get_space(self, x, y):
         return self.board[y][x]
