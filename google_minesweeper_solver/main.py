@@ -7,18 +7,10 @@ from google_minesweeper_solver.games.google import get_board, get_board_old
 
 
 def main():
-    start1 = time.time()
-    board_awesome = get_board()
-    start2 = time.time()
-    board_worse = get_board_old()
-    done = time.time()
-    better_time = start2 - start1
-    worse_time = done - start2
-    print("Better time: {}\nWorse time: {}".format(better_time, worse_time))
-    print("done")
-    # if board is None:
-    #     return print("No board could be found!")
-    # do_move(board)
+    board = get_board()
+    if board is None:
+        return print("No board could be found!")
+    do_move(board)
 
 
 def do_move(board):
@@ -38,8 +30,8 @@ def do_move(board):
     elif move.action == 1:
         pyautogui.click(button="left")
         pyautogui.moveTo(1, 1)
-        virtual_board.populate_board(board.get_tile_values())
-    time.sleep(.5)
+        time.sleep(.25)
+        board.update()
     do_move(board)
 
 

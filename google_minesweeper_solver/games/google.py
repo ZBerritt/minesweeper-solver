@@ -99,10 +99,7 @@ class GoogleBoard:
 
         # Get virtual board
         self.virtual_board = virtual_board.Board(self.boxes_horizontal, self.boxes_vertical)
-        screen = pyautogui.screenshot()
-        for y in range(self.boxes_vertical):
-            for x in range(self.boxes_horizontal):
-                self.virtual_board.set_value(x, y, self.tile_value(x, y, screen))
+        self.update()
 
     def box_count(self):
         return self.boxes_vertical * self.boxes_horizontal
@@ -143,16 +140,11 @@ class GoogleBoard:
             return None
         return 0
 
-    # Pretty slow, maybe need to start combining stuff
-    def get_tile_values(self):
-        values = []
-        row_num = -1
-        for y in range(0, self.boxes_vertical):
-            row_num += 1
-            values.append([])
-            for x in range(0, self.boxes_horizontal):
-                values[row_num].append(self.tile_value(x, y))
-        return values
+    def update(self):
+        screen = pyautogui.screenshot()
+        for y in range(self.boxes_vertical):
+            for x in range(self.boxes_horizontal):
+                self.virtual_board.set_value(x, y, self.tile_value(x, y, screen))
 
 
 google_colors = {

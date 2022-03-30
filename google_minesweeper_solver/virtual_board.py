@@ -18,7 +18,7 @@ class Board:
         return self.board[y][x]
 
     def set_value(self, x, y, value):
-        self.board[y][x] = value  # Sets a new value without re-declaring the tile
+        self.board[y][x].value = value  # Sets a new value without re-declaring the tile
 
     def get_surrounding_tiles(self, x, y):
         tiles = []
@@ -42,13 +42,9 @@ class Board:
 
     def get_unsolved_tiles(self):
         tiles = []
-        x = -1
-        y = -1
-        for row in self.board:
-            y += 1
-            x = -1
-            for tile in row:
-                x += 1
+        for y in range(self.vertical_tiles):
+            for x in range(self.horizontal_tiles):
+                tile = self.get_space(x, y)
                 if not tile.solved:
                     tiles.append((x, y, tile))
         return tiles
