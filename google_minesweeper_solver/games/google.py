@@ -144,8 +144,7 @@ class GoogleBoard:
         screen = pyautogui.screenshot()
         for y in range(self.boxes_vertical):
             for x in range(self.boxes_horizontal):
-                value = self.tile_value(x, y, screen)
-                self.virtual_board.set_value(x, y, value)
+                self.virtual_board.set_value(x, y, self.tile_value(x, y, screen))
 
 
 google_colors = {

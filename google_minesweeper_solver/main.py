@@ -23,7 +23,7 @@ def do_move(board):
     elif move.action == 1:
         pyautogui.click(button="left")
         pyautogui.moveTo(1, 1)
-        time.sleep(.25)
+        time.sleep(.5)
         board.update()
     do_move(board)
 
