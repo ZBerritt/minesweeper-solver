@@ -134,6 +134,8 @@ class GoogleBoard:
                     return 2
                 elif near_same_color(pixel, google_colors["three"], 10):
                     return 3
+                elif near_same_color(pixel, google_colors["four"], 10):
+                    return 4
         mid_pixel = screen.getpixel(self.get_mouse_position(x, y))
         if near_same_color(mid_pixel, google_colors["light_empty"]) or near_same_color(mid_pixel,
                                                                                        google_colors["dark_empty"]):
@@ -157,5 +159,6 @@ google_colors = {
     # The colors are gradients, but as long as the color shows on the square its a number
     "one": (25, 118, 210),
     "two": (55, 141, 59),
-    "three": (211, 47, 47)
+    "three": (211, 47, 47),
+    "four": (119, 16, 162)
 }

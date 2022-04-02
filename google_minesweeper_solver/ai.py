@@ -3,7 +3,7 @@ import random
 
 
 # Gets the next move that the solver should use
-# Returns - Move object if move is found, None otherwise
+# Returns - (x, y, action (0 Flag, 1 Click). None indicates the game is lost
 def get_next_move(board):
     border_tiles = board.get_border_tiles()
 
@@ -14,16 +14,19 @@ def get_next_move(board):
         unrevealed_surrounding = [t for t in surrounding if t[2].value is None]
         chance_of_mine = remaining_mines / len(unrevealed_surrounding)
         if chance_of_mine == 1:
-            return Move(unrevealed_surrounding[0][0], unrevealed_surrounding[0][1], 0)
+            moves = []
+            for u in unrevealed_surrounding:
+                moves.append((u[0], u[1], 0))
+            return moves
         elif chance_of_mine == 0:
-            return Move(unrevealed_surrounding[0][0], unrevealed_surrounding[0][1], 1)
+            moves = []
+            for u in unrevealed_surrounding:
+                moves.append((u[0], u[1], 1))
+            return moves
 
     # All else fails, random shot in the dark
-    return Move(random.randrange(0, board.horizontal_tiles - 1), random.randrange(0, board.vertical_tiles), 1)
-
-
-class Move:
-    def __init__(self, x, y, action):
-        self.x = x
-        self.y = y
-        self.action = action  # 0 - Flag, 1 - Click
+    tiles = board.get_empty_tiles()
+    if len(tiles) == 0:
+        return None
+    random_tile = tiles[random.randrange(0, len(tiles))]
+    return [(random_tile[0], random_tile[1], 1)]

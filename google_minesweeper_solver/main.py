@@ -9,21 +9,25 @@ from google_minesweeper_solver.games.google import get_board
 def do_move(board):
     virtual_board = board.virtual_board
     virtual_board.solve_tiles()
-    move = ai.get_next_move(board.virtual_board)
-    pyautogui.moveTo(board.get_mouse_position(move.x, move.y))
-    action_name = ""
-    if move.action == 0:
-        action_name = "Flag"
-    elif move.action == 1:
-        action_name = "Click"
-    print("({}, {}) - {}".format(move.x, move.y, action_name))
-    if move.action == 0:
-        pyautogui.click(button="right")
-        virtual_board.get_space(move.x, move.y).value = -1  # Change the value to a mine, no need to rescan
-    elif move.action == 1:
-        pyautogui.click(button="left")
-        pyautogui.moveTo(1, 1)
-        time.sleep(.5)
+    moves = ai.get_next_move(board.virtual_board)
+    if moves is None:
+        return print("No more moves can be found. Idk if you won tho...")
+    for move in moves:
+        pyautogui.moveTo(board.get_mouse_position(move[0], move[1]))
+        action_name = ""
+        if move[2] == 0:
+            action_name = "Flag"
+        elif move[2] == 1:
+            action_name = "Click"
+        print("({}, {}) - {}".format(move[0], move[1], action_name))
+        if move[2] == 0:
+            pyautogui.click(button="right")
+            virtual_board.get_space(move[0], move[1]).value = -1  # Change the value to a mine, no need to rescan
+        elif move[2] == 1:
+            pyautogui.click(button="left")
+            pyautogui.moveTo(1, 1)
+    if moves[0][2] == 1:  # Weird way to determine if the board needs reloading
+        time.sleep(.5)  # Google's animations make it hard to detect updates at an instant
         board.update()
     do_move(board)
 
