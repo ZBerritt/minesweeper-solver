@@ -6,7 +6,9 @@ import random
 # Returns - (x, y, action (0 Flag, 1 Click). None indicates the game is lost
 def get_next_move(board):
     border_tiles = board.get_border_tiles()
-
+    
+    moves = []
+    spaces = []
     for tile in border_tiles:
         # Super Mega Basic Algorithm
         remaining_mines = board.remaining_nearby_mines(tile[0], tile[1])
@@ -14,15 +16,17 @@ def get_next_move(board):
         unrevealed_surrounding = [t for t in surrounding if t[2].value is None]
         chance_of_mine = remaining_mines / len(unrevealed_surrounding)
         if chance_of_mine == 1:
-            moves = []
             for u in unrevealed_surrounding:
-                moves.append((u[0], u[1], 0))
-            return moves
+                if (u[0], u[1]) not in spaces:
+                    moves.append((u[0], u[1], 0))
+                    spaces.append((u[0], u[1]))
         elif chance_of_mine == 0:
-            moves = []
             for u in unrevealed_surrounding:
-                moves.append((u[0], u[1], 1))
-            return moves
+                if (u[0], u[1]) not in spaces:
+                    moves.append((u[0], u[1], 1))
+                    spaces.append((u[0], u[1]))
+    if len(moves) > 0:
+        return moves
 
     # All else fails, random shot in the dark
     tiles = board.get_empty_tiles()
