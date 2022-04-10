@@ -7,11 +7,7 @@ class Board:
         # Generates empty board
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
-        self.board = []
-        for y in range(self.vertical_tiles):
-            self.board.append([])
-            for x in range(self.horizontal_tiles):
-                self.board[y].append(Tile(None))
+        self.board = [[Tile(None) for i in range(self.horizontal_tiles)] for i in range(self.vertical_tiles)]
 
     def populate_board(self, values):
         for y in range(len(values)):

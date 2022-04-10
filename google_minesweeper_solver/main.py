@@ -13,21 +13,22 @@ def do_move(board):
     if moves is None:
         return print("No more moves can be found. Idk if you won tho...")
     for move in moves:
-        pyautogui.moveTo(board.get_mouse_position(move[0], move[1]))
+        x, y, action = move
+        pyautogui.moveTo(board.get_mouse_position(x, y))
         action_name = ""
-        if move[2] == 0:
+        if action == 0:
             action_name = "Flag"
-        elif move[2] == 1:
+        elif action == 1:
             action_name = "Click"
-        print("({}, {}) - {}".format(move[0], move[1], action_name))
-        if move[2] == 0:
+        print(f"({x}, {y}) - {action_name}")
+        if action == 0:
             pyautogui.click(button="right")
             virtual_board.get_space(move[0], move[1]).value = -1  # Change the value to a mine, no need to rescan
-        elif move[2] == 1:
+        elif action == 1:
             pyautogui.click(button="left")
             pyautogui.moveTo(1, 1)
     if moves[0][2] == 1:  # Weird way to determine if the board needs reloading
-        time.sleep(.5)  # Google's animations make it hard to detect updates at an instant
+        time.sleep(1)  # Google's animations make it hard to detect updates at an instant
         board.update()
     do_move(board)
 
