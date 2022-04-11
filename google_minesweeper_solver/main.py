@@ -29,7 +29,7 @@ def do_move(board):
     elif action == 1:
         pyautogui.click(button="left")
         pyautogui.moveTo(1, 1)
-        # time.sleep(1)  # Google's animations make it hard to detect updates at an instant
+        # time.sleep(2)  # Google's animations make it hard to detect updates at an instant
         board.update()
     do_move(board)
 

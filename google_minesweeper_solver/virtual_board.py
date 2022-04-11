@@ -1,4 +1,5 @@
 # Virtual minesweeper board derived from the browser for simulating and calculations
+from dataclasses import dataclass
 
 
 class Board:
@@ -7,7 +8,7 @@ class Board:
         # Generates empty board
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
-        self.board = [[Tile(None) for i in range(self.horizontal_tiles)] for i in range(self.vertical_tiles)]
+        self.board = [[Tile(None, False) for i in range(self.horizontal_tiles)] for i in range(self.vertical_tiles)]
 
     def populate_board(self, values):
         for y in range(len(values)):
@@ -92,18 +93,17 @@ class Board:
         return tile.value - len([m for m in surrounding if m[2].value == -1])
 
 
-# TODO - Maybe add x and y attributes
+@dataclass
 class Tile:
-    def __init__(self, value):
-        """
-        Values:
-        None: Undiscovered
-        -1: Flagged Mine
-        0: Empty tile
-        1-8: Numbered tile
-        """
-        self.value = value
-        self.solved = False  # True if all surrounding squares have a value other than None (discovered/flagged)
+    """
+    Values:
+    None: Undiscovered
+    -1: Flagged Mine
+    0: Empty tile
+    1-8: Numbered tile
+    """
+    value: int
+    solved: bool  # True if all surrounding squares have a value other than None (discovered/flagged)
 
     def set_value(self, value):
         self.value = value

@@ -1,5 +1,3 @@
-import time
-
 import pyautogui
 
 from google_minesweeper_solver import virtual_board
@@ -84,24 +82,24 @@ class GoogleBoard:
         bottom_y = top_y + self.box_dimensions[1] - 1
         return [[left_x, right_x], [top_y, bottom_y]]
 
-    # TODO - The value recognition by color is completely busted AND slow as balls
     def tile_value(self, x, y, screen):
         positions = self.tile_range(x, y)
-
-        for y_pos in range(positions[1][0], positions[1][1]):
-            for x_pos in range(positions[0][0], positions[0][1]):
-                pixel = screen.getpixel((x_pos, y_pos))
-                # if near_same_color(pixel, google_colors["flag"], 10):
-                #     return -1
-                if near_same_color(pixel, google_colors["one"], 10):
-                    return 1
-                elif near_same_color(pixel, google_colors["two"], 10):
-                    return 2
-                elif near_same_color(pixel, google_colors["three"], 10):
-                    return 3
-                elif near_same_color(pixel, google_colors["four"], 10):
-                    return 4
         mid_pixel = screen.getpixel(self.get_mouse_position(x, y))
+        tile_area = screen.crop((positions[0][0], positions[1][0], positions[0][1], positions[1][1]))
+        unique_colors = tile_area.getcolors(tile_area.size[0]*tile_area.size[1])
+        for c in unique_colors:
+            color = c[1]
+            if near_same_color(color, google_colors["flag"], 10):
+                return -1
+            elif near_same_color(color, google_colors["one"], 10):
+                return 1
+            elif near_same_color(color, google_colors["two"], 10):
+                return 2
+            elif near_same_color(color, google_colors["three"], 10):
+                return 3
+            elif near_same_color(color, google_colors["four"], 10):
+                return 4
+
         if near_same_color(mid_pixel, google_colors["light_open"]) or near_same_color(mid_pixel,
                                                                                        google_colors["dark_open"]):
             return 0
