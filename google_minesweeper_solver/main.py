@@ -7,11 +7,14 @@ from google_minesweeper_solver.games.google import get_board
 
 
 def do_move(board):
+    done = board.game_over()
+    if done:
+        return print("Game Over.")
     virtual_board = board.virtual_board
     virtual_board.solve_tiles()
     moves = ai.get_next_move(board.virtual_board)
     if moves is None:
-        return print("No more moves can be found. Idk if you won tho...")
+        return print("No more moves can be found...")
     for move in moves:
         x, y, action = move
         pyautogui.moveTo(board.get_mouse_position(x, y))

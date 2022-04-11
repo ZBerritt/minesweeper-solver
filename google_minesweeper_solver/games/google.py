@@ -113,6 +113,15 @@ class GoogleBoard:
         for tile in tiles:
             self.virtual_board.set_value(tile[0], tile[1], self.tile_value(tile[0], tile[1], screen))
 
+    def game_over(self):
+        screen = pyautogui.screenshot()
+        for y in range(self.boxes_vertical):
+            for x in range(self.boxes_horizontal):
+                pos = self.get_mouse_position(x, y)
+                pixel = screen.getpixel(pos)
+                if near_same_color(pixel, google_colors["results"], 10):
+                    return True
+
 
 google_colors = {
     "light_empty": (170, 215, 81),
@@ -121,6 +130,7 @@ google_colors = {
     "dark_open": (211, 185, 157),
     "border": (126, 164, 53),
     "flag": (242, 54, 7),
+    "results": (77, 193, 249),
     # The colors are gradients, but as long as the color shows on the square its a number
     "one": (25, 118, 210),
     "two": (55, 141, 59),
