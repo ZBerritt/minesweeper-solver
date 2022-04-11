@@ -4,9 +4,15 @@ import random
 
 # Gets the next move that the solver should use
 # Returns - (x, y, action (0 Flag, 1 Click). None indicates the game is lost
-def get_next_move(board):
+def get_next_move(board, first=False):
+    if first:
+        tiles = board.get_empty_tiles()
+        if len(tiles) == 0:
+            return None
+        random_tile = tiles[random.randrange(0, len(tiles))]
+        return random_tile[0], random_tile[1], 1
     border_tiles = board.get_border_tiles()
-    
+
     moves = []
     spaces = []
     for tile in border_tiles:
@@ -21,9 +27,4 @@ def get_next_move(board):
         elif chance_of_mine == 0:
             return first_space[0], first_space[1], 1
 
-    # All else fails, random shot in the dark
-    tiles = board.get_empty_tiles()
-    if len(tiles) == 0:
-        return None
-    random_tile = tiles[random.randrange(0, len(tiles))]
-    return random_tile[0], random_tile[1], 1
+    return None
