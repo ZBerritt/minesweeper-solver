@@ -41,24 +41,20 @@ class Board:
             tiles.append((x - 1, y, self.get_space(x - 1, y)))  # Left
         return tiles
 
-    def get_unsolved_tiles(self):
+    def get_all_tiles(self):
         tiles = []
         for y in range(self.vertical_tiles):
             for x in range(self.horizontal_tiles):
                 tile = self.get_space(x, y)
-                if not tile.solved:
-                    tiles.append((x, y, tile))
+                tiles.append((x, y, tile))
         return tiles
+
+    def get_unsolved_tiles(self):
+        return [t for t in self.get_all_tiles() if not t[2].solved]
 
     # Undiscovered, not empty
     def get_empty_tiles(self):
-        tiles = []
-        for y in range(0, self.vertical_tiles):
-            for x in range(0, self.horizontal_tiles):
-                tile = self.get_space(x, y)
-                if tile.value is None:
-                    tiles.append((x, y, tile))
-        return tiles
+        return [t for t in self.get_all_tiles() if t[2].value is None]
 
     def solve_tiles(self):
         unsolved_tiles = self.get_unsolved_tiles()

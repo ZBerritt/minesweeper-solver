@@ -15,22 +15,15 @@ def get_next_move(board):
         surrounding = board.get_surrounding_tiles(tile[0], tile[1])
         unrevealed_surrounding = [t for t in surrounding if t[2].value is None]
         chance_of_mine = remaining_mines / len(unrevealed_surrounding)
+        first_space = unrevealed_surrounding[0]
         if chance_of_mine == 1:
-            for u in unrevealed_surrounding:
-                if (u[0], u[1]) not in spaces:
-                    moves.append((u[0], u[1], 0))
-                    spaces.append((u[0], u[1]))
+            return first_space[0], first_space[1], 0
         elif chance_of_mine == 0:
-            for u in unrevealed_surrounding:
-                if (u[0], u[1]) not in spaces:
-                    moves.append((u[0], u[1], 1))
-                    spaces.append((u[0], u[1]))
-    if len(moves) > 0:
-        return moves
+            return first_space[0], first_space[1], 1
 
     # All else fails, random shot in the dark
     tiles = board.get_empty_tiles()
     if len(tiles) == 0:
         return None
     random_tile = tiles[random.randrange(0, len(tiles))]
-    return [(random_tile[0], random_tile[1], 1)]
+    return random_tile[0], random_tile[1], 1
