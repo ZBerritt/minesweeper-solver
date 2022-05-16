@@ -74,7 +74,7 @@ class Board:
         tiles = []
         unsolved = self.get_unsolved_tiles()
         for tile in unsolved:
-            if tile[2].value is None:
+            if tile[2].value is None or tile[2].value == -1:
                 continue
             surrounding = self.get_surrounding_tiles(tile[0], tile[1])
             for adj_tile in surrounding:
