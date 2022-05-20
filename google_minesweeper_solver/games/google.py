@@ -1,7 +1,10 @@
 import pyautogui
-
 from google_minesweeper_solver import virtual_board
 from google_minesweeper_solver.util import near_same_color
+from PIL import ImageGrab
+from functools import partial
+
+ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
 
 # TODO - Get board that's partially complete
@@ -33,7 +36,7 @@ def get_board():
         else:
             pixel = im.getpixel((top_left[0], y))
             if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
-                    "dark_empty"]):
+                "dark_empty"]):
                 # Bottom of the board is found, need to find bottom right now
                 for x in range(top_left[0], im.width):
                     pixel = im.getpixel((x, y - 1))
@@ -86,7 +89,7 @@ class GoogleBoard:
         positions = self.tile_range(x, y)
         mid_pixel = screen.getpixel(self.get_mouse_position(x, y))
         tile_area = screen.crop((positions[0][0], positions[1][0], positions[0][1], positions[1][1]))
-        unique_colors = tile_area.getcolors(tile_area.size[0]*tile_area.size[1])
+        unique_colors = tile_area.getcolors(tile_area.size[0] * tile_area.size[1])
         for c in unique_colors:
             color = c[1]
             if near_same_color(color, google_colors["flag"], 10):
@@ -101,7 +104,7 @@ class GoogleBoard:
                 return 4
 
         if near_same_color(mid_pixel, google_colors["light_open"]) or near_same_color(mid_pixel,
-                                                                                       google_colors["dark_open"]):
+                                                                                      google_colors["dark_open"]):
             return 0
         return None
 
@@ -122,17 +125,17 @@ class GoogleBoard:
 
 
 google_colors = {
-    "light_empty": (170, 215, 81),
-    "dark_empty": (162, 209, 73),
-    "light_open": (224, 195, 163),
-    "dark_open": (211, 185, 157),
-    "border": (126, 164, 53),
-    "flag": (242, 54, 7),
-    "results": (77, 193, 249),
-    # The colors are gradients, but as long as the color shows on the square its a number
-    "one": (25, 118, 210),
-    "two": (55, 141, 59),
-    "three": (211, 47, 47),
-    "four": (119, 16, 162),
-    "five": (255, 139, 0)
+    "light_empty": [(170, 215, 81),],
+    "dark_empty": [(162, 209, 73)],
+    "light_open": [(224, 195, 163)],
+    "dark_open": [(211, 185, 157)],
+    "border": [(126, 164, 53)],
+    "flag": [(242, 54, 7), (230, 51, 7)],
+    "results": [(77, 193, 249)],
+    # The colors are gradients, but as long as the color shows on the square it's a number
+    "one": [(25, 118, 210), (24, 118, 210), (11, 113, 213)],
+    "two": [(55, 141, 59), (78, 148, 72)],
+    "three": [(211, 47, 47), (210, 41, 43)],
+    "four": [(119, 16, 162), (121, 29, 162)],
+    "five": [(255, 139, 0)]
 }
