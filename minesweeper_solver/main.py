@@ -2,8 +2,8 @@ import time
 
 import pyautogui
 
-from google_minesweeper_solver import ai
-from google_minesweeper_solver.games.google import get_board
+from minesweeper_solver import ai
+from minesweeper_solver.games.google import get_board
 
 
 def do_move(board, first=False):

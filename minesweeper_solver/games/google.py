@@ -1,6 +1,6 @@
 import pyautogui
-from google_minesweeper_solver import virtual_board
-from google_minesweeper_solver.util import near_same_color
+from minesweeper_solver import virtual_board
+from minesweeper_solver.util import near_same_color
 from PIL import ImageGrab
 from functools import partial
 
