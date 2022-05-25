@@ -83,6 +83,20 @@ class Board:
                     break
         return tiles
 
+    def get_undiscovered_borders(self):
+        tiles = []
+        all_tiles = self.get_all_tiles()
+        for tile in all_tiles:
+            if tile[2].value is not None:
+                continue
+            surrounding = self.get_surrounding_tiles(tile[0], tile[1])
+            for adj_tile in surrounding:
+                if adj_tile[2].value is not None \
+                        and adj_tile[2].value != -1:
+                    tiles.append(tile)
+                    break
+        return tiles
+
     def remaining_nearby_mines(self, x, y):
         tile = self.get_space(x, y)
         if tile.value is None:
@@ -91,6 +105,28 @@ class Board:
             return 0
         surrounding = self.get_surrounding_tiles(x, y)
         return tile.value - len([m for m in surrounding if m[2].value == -1])
+
+    def get_border_groups(self):
+        # Get all undiscovered tiles bordering numbers and group them
+        undiscovered_borders = self.get_undiscovered_borders()
+        border_groups = []
+
+        # Defined in the function since it's only used here
+        def make_group(tile, checking):
+            sub_group = [tile]
+            surrounding = self.get_surrounding_tiles(tile[0], tile[1])
+            for s in surrounding:
+                if s in checking:
+                    checking.remove(s)
+                    sub_sub_group = make_group(s, checking)
+                    sub_group += sub_sub_group
+            return sub_group
+
+        while len(undiscovered_borders) > 0:
+            first = undiscovered_borders[0]
+            undiscovered_borders.remove(first)
+            group = make_group(first, undiscovered_borders)
+            border_groups.append(group)
 
 
 @dataclass
