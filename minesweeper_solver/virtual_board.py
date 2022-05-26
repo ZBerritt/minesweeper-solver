@@ -68,8 +68,7 @@ class Board:
                     break
             tile[2].solved = solved
 
-    # Tiles that border any undiscovered tile. 
-    # TODO - Might need another function to get undiscovered tiles that border numbered tiles
+    # Tiles that border any undiscovered tile.
     def get_border_tiles(self):
         tiles = []
         unsolved = self.get_unsolved_tiles()

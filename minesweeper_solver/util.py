@@ -1,3 +1,4 @@
+# Is the color given near any target colors
 def near_same_color(color, targets, tolerance=5):
     for target in targets:
         if(abs(color[0] - target[0]) <= tolerance

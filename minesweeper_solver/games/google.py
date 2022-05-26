@@ -1,6 +1,8 @@
 import pyautogui
 from minesweeper_solver import virtual_board
 from minesweeper_solver.util import near_same_color
+
+# Fix for duel monitors
 from PIL import ImageGrab
 from functools import partial
 
@@ -108,12 +110,14 @@ class GoogleBoard:
             return 0
         return None
 
+    # Update all board values
     def update(self):
         screen = pyautogui.screenshot()
         tiles = self.virtual_board.get_empty_tiles()
         for tile in tiles:
             self.virtual_board.set_value(tile[0], tile[1], self.tile_value(tile[0], tile[1], screen))
 
+    # Returns if the results screen is showing which means the game is over
     def game_over(self):
         screen = pyautogui.screenshot()
         for y in range(self.boxes_vertical):
@@ -125,7 +129,7 @@ class GoogleBoard:
 
 
 google_colors = {
-    "light_empty": [(170, 215, 81),],
+    "light_empty": [(170, 215, 81), ],
     "dark_empty": [(162, 209, 73)],
     "light_open": [(224, 195, 163)],
     "dark_open": [(211, 185, 157)],
@@ -138,4 +142,5 @@ google_colors = {
     "three": [(211, 47, 47), (210, 41, 43)],
     "four": [(119, 16, 162), (121, 29, 162)],
     "five": [(255, 139, 0)]
+    # TODO: Add 6 and 7
 }
