@@ -104,6 +104,8 @@ class GoogleBoard:
                 return 3
             elif near_same_color(color, google_colors["four"], 10):
                 return 4
+            elif near_same_color(color, google_colors["five"], 10):
+                return 5
 
         if near_same_color(mid_pixel, google_colors["light_open"]) or near_same_color(mid_pixel,
                                                                                       google_colors["dark_open"]):
