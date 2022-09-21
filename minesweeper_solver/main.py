@@ -3,15 +3,17 @@ import time
 import pyautogui
 
 from minesweeper_solver import ai
-from minesweeper_solver.games.google import get_board
+from minesweeper_solver.games import google
 
 SECONDS_TO_RELOAD = 2
 
 
 def do_move(board, first=False):
-    done = board.game_over()
-    if done:
-        return print("Game Over.")
+    end_condition = board.game_over()
+    if end_condition == 1:
+        return print("Game Over...")
+    elif end_condition == 2:
+        return print("I win!")
     virtual_board = board.virtual_board
     virtual_board.solve_tiles()  # Speed up the algorithm by ignoring tiles that don't matter
     moves = ai.get_next_moves(board.virtual_board, first)
@@ -31,9 +33,19 @@ def do_move(board, first=False):
     do_move(board)
 
 
+def get_board():
+    # TODO - Make a faster method for getting the board (idk man)
+    # Google
+    board = google.get_board()
+    if board:
+        return board
+
+
 if __name__ == "__main__":
-    google_board = get_board()  # TODO: Restructure to make easier to add new board types
-    if google_board is None:
+    print("Scanning for Minesweeper boards...")
+    m_board = get_board()  # Automatically gets the correct board type
+    if m_board is None:
         print("No board could be found! Make sure the app is all on screen.")
     else:
-        do_move(google_board, True)
+        print("{0} board detected! Beginning solver.".format(m_board.name))
+        do_move(m_board, True)

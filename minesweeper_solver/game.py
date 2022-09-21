@@ -1,11 +1,11 @@
 from abc import abstractmethod, ABC
-
 import pyautogui
 from minesweeper_solver import virtual_board
 
 # Fix for duel monitors
 from PIL import ImageGrab
 from functools import partial
+
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
 
@@ -14,7 +14,8 @@ def get_screen():
 
 
 class Game(ABC):
-    def __init__(self, top_left, board_dimensions, box_dimensions):
+    def __init__(self, name, top_left, board_dimensions, box_dimensions):
+        self.name = name
         self.top_left = top_left
         self.dimensions = board_dimensions
         self.box_dimensions = box_dimensions

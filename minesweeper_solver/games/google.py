@@ -52,7 +52,7 @@ def get_board():
 
 class GoogleBoard(Game):
     def __init__(self, top_left, board_dimensions, box_dimensions):
-        super().__init__(top_left, board_dimensions, box_dimensions)
+        super().__init__("Google", top_left, board_dimensions, box_dimensions)
 
     def tile_value(self, x, y, screen):
         positions = self.tile_range(x, y)
@@ -81,7 +81,7 @@ class GoogleBoard(Game):
             return 0
         return None
 
-    # Returns if the results screen is showing which means the game is over
+    # Returns 1 if a loss is detected, returns 2 if a win is detected, returns 0 otherwise
     def game_over(self):
         screen = get_screen()
         for y in range(self.boxes_vertical):
@@ -89,7 +89,8 @@ class GoogleBoard(Game):
                 pos = self.get_mouse_position(x, y)
                 pixel = screen.getpixel(pos)
                 if near_same_color(pixel, google_colors["results"], 10):
-                    return True
+                    return 2
+        return 0
 
 
 google_colors = {
