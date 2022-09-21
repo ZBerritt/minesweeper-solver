@@ -1,17 +1,10 @@
-import pyautogui
-from minesweeper_solver import virtual_board
+from minesweeper_solver.game import Game, get_screen
 from minesweeper_solver.util import near_same_color
-
-# Fix for duel monitors
-from PIL import ImageGrab
-from functools import partial
-
-ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
 
 # TODO - Get board that's partially complete
 def get_board():
-    im = pyautogui.screenshot()
+    im = get_screen()
     top_left = None
     box_one_bottom_right = None
     bottom_right = None
@@ -57,35 +50,9 @@ def get_board():
     return GoogleBoard(top_left, board_dimensions, box_dimensions)
 
 
-class GoogleBoard:
+class GoogleBoard(Game):
     def __init__(self, top_left, board_dimensions, box_dimensions):
-        self.top_left = top_left
-        self.dimensions = board_dimensions
-        self.box_dimensions = box_dimensions
-        self.boxes_horizontal = int(self.dimensions[0] / self.box_dimensions[0])
-        self.boxes_vertical = int(self.dimensions[1] / self.box_dimensions[1])
-
-        # Get virtual board
-        self.virtual_board = virtual_board.Board(self.boxes_horizontal, self.boxes_vertical)
-        self.update()
-
-    def box_count(self):
-        return self.boxes_vertical * self.boxes_horizontal
-
-    def get_mouse_position(self, x, y):  # x and y are defined over the board, not the screen (box 1 is {0, 0])
-        # Get the position of the box
-        tr_x_pos = self.top_left[0] + (self.box_dimensions[0] * x)
-        tr_y_pos = self.top_left[1] + (self.box_dimensions[1] * y)
-        x_pos = tr_x_pos + round(self.box_dimensions[0] / 2)
-        y_pos = tr_y_pos + round(self.box_dimensions[1] / 2)
-        return x_pos, y_pos
-
-    def tile_range(self, x, y):
-        left_x = self.top_left[0] + (self.box_dimensions[0] * x)
-        top_y = self.top_left[1] + (self.box_dimensions[1] * y)
-        right_x = left_x + self.box_dimensions[0] - 1
-        bottom_y = top_y + self.box_dimensions[1] - 1
-        return [[left_x, right_x], [top_y, bottom_y]]
+        super().__init__(top_left, board_dimensions, box_dimensions)
 
     def tile_value(self, x, y, screen):
         positions = self.tile_range(x, y)
@@ -114,16 +81,9 @@ class GoogleBoard:
             return 0
         return None
 
-    # Update all board values
-    def update(self):
-        screen = pyautogui.screenshot()
-        tiles = self.virtual_board.get_empty_tiles()
-        for tile in tiles:
-            self.virtual_board.set_value(tile[0], tile[1], self.tile_value(tile[0], tile[1], screen))
-
     # Returns if the results screen is showing which means the game is over
     def game_over(self):
-        screen = pyautogui.screenshot()
+        screen = get_screen()
         for y in range(self.boxes_vertical):
             for x in range(self.boxes_horizontal):
                 pos = self.get_mouse_position(x, y)
@@ -133,7 +93,7 @@ class GoogleBoard:
 
 
 google_colors = {
-    "light_empty": [(170, 215, 81), ],
+    "light_empty": [(170, 215, 81)],
     "dark_empty": [(162, 209, 73)],
     "light_open": [(224, 195, 163)],
     "dark_open": [(211, 185, 157)],
