@@ -13,12 +13,14 @@ def get_screen():
     return pyautogui.screenshot()
 
 
+# Represents and arbitrary game board that is shown on the screen
 class Game(ABC):
-    def __init__(self, name, top_left, board_dimensions, box_dimensions):
+    def __init__(self, name, top_left, board_dimensions, box_dimensions, move_delay):
         self.name = name
         self.top_left = top_left
         self.dimensions = board_dimensions
         self.box_dimensions = box_dimensions
+        self.move_delay = move_delay
         self.boxes_horizontal = int(self.dimensions[0] / self.box_dimensions[0])
         self.boxes_vertical = int(self.dimensions[1] / self.box_dimensions[1])
 

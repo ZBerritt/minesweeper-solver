@@ -5,17 +5,20 @@ import pyautogui
 from minesweeper_solver import ai
 from minesweeper_solver.games import google
 
-SECONDS_TO_RELOAD = 2
-
 
 def do_move(board, first=False):
+    # Test for any end conditions
     end_condition = board.game_over()
     if end_condition == 1:
         return print("Game Over...")
     elif end_condition == 2:
         return print("I win!")
+
+    # Move Setup
     virtual_board = board.virtual_board
     virtual_board.solve_tiles()  # Speed up the algorithm by ignoring tiles that don't matter
+
+    # Execute next move
     moves = ai.get_next_moves(board.virtual_board, first)
     if moves is None:
         return print("No more moves can be found...")
@@ -23,13 +26,15 @@ def do_move(board, first=False):
         x, y, action = move
         print(f"({x}, {y}) - {'Flag' if action == 0 else 'Click'}")
         pyautogui.moveTo(board.get_mouse_position(x, y))
-        if action == 0:
-            pyautogui.click(button="right")
-        if action == 1:
-            pyautogui.click(button="left")
+        button = "right" if action == 0 else "left";
+        pyautogui.click(button=button)
+
+    # Cleanup & Updates
     pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
-    time.sleep(SECONDS_TO_RELOAD)  # Google's animations make it hard to detect updates at an instant
+    time.sleep(board.move_delay / 1000)  # Google's animations make it hard to detect updates at an instant
     board.update()
+
+    # Recursion
     do_move(board)
 
 

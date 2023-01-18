@@ -52,7 +52,7 @@ def get_board():
 
 class GoogleBoard(Game):
     def __init__(self, top_left, board_dimensions, box_dimensions):
-        super().__init__("Google", top_left, board_dimensions, box_dimensions)
+        super().__init__("Google", top_left, board_dimensions, box_dimensions, 2000)
 
     def tile_value(self, x, y, screen):
         positions = self.tile_range(x, y)
