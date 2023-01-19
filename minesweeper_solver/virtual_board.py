@@ -21,7 +21,12 @@ class Board:
         return self.board[y][x]
 
     def set_value(self, x, y, value):
+        if self.board[y][x].value == -1:
+            return  # Ignore mines - Once a mine, always a mine
         self.board[y][x].set_value(value)  # Sets a new value without re-declaring the tile
+
+    def set_mine(self, x, y):
+        self.get_space(x, y).value = -1
 
     def get_surrounding_tiles(self, x, y):
         tiles = []

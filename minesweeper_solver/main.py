@@ -24,7 +24,7 @@ def get_board():
         return board
 
 
-def do_move(board, first=False):
+def do_move(board, first=False, flags=False):
     # Test for any end conditions
     end_condition = board.game_over()
     if end_condition == 1:
@@ -40,17 +40,26 @@ def do_move(board, first=False):
     moves = ai.get_next_moves(board.virtual_board, first)
     if moves is None:
         return print("No more moves can be found...")
+    clicked = False
     for move in moves:
         x, y, action = move
-        print(f"({x}, {y}) - {'Flag' if action == 0 else 'Click'}")
-        pyautogui.moveTo(board.get_mouse_position(x, y))
-        button = "right" if action == 0 else "left";
-        pyautogui.click(button=button)
+        print(f"({x}, {y}) - {'Mine' if action == 0 else 'Safe'}")
+        if action == 1:  # Safe
+            pyautogui.moveTo(board.get_mouse_position(x, y))
+            clicked = True
+            pyautogui.click(button="left")
+        else:  # Mine
+            if flags:
+                pyautogui.moveTo(board.get_mouse_position(x, y))
+                clicked = True
+                pyautogui.click(button="right")
+            virtual_board.set_mine(x, y)  # Manually set the mine, solver ignores flags
 
     # Cleanup & Updates
-    pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
-    time.sleep(board.move_delay / 1000)  # Google's animations make it hard to detect updates at an instant
-    board.update()
+    if clicked:
+        pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
+        time.sleep(board.move_delay / 1000)  # Google's animations make it hard to detect updates at an instant
+        board.update()
 
     # Recursion
     do_move(board)

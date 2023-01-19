@@ -20,6 +20,7 @@ def get_next_moves(board, first=False):
     moves = set()
 
     # Basic Algorithm
+    # Super quick but doesn't always find a solution
     for tile in border_tiles:
         remaining_mines = board.remaining_nearby_mines(tile[0], tile[1])
         surrounding = board.get_surrounding_tiles(tile[0], tile[1])
@@ -34,7 +35,9 @@ def get_next_moves(board, first=False):
         return moves
 
     # TODO: Standard Algorithm
+    # Uses some extra tricks to find any guaranteed mines or safe spaces
 
     # TODO: Probability Algorithm
+    # When all else fails, uses probability to find the chances of getting a mine
 
     return None  # No moves could be made.
