@@ -6,6 +6,24 @@ from minesweeper_solver import ai
 from minesweeper_solver.games import google
 
 
+def main():
+    print("Scanning for Minesweeper boards...")
+    m_board = get_board()  # Automatically gets the correct board type
+    if m_board is None:
+        print("No board could be found! Make sure the app is all on screen.")
+    else:
+        print("{0} board detected! Beginning solver.".format(m_board.name))
+        do_move(m_board, True)
+
+
+def get_board():
+    # TODO - Make a faster method for getting the board (idk man)
+    # Google
+    board = google.get_board()
+    if board:
+        return board
+
+
 def do_move(board, first=False):
     # Test for any end conditions
     end_condition = board.game_over()
@@ -38,19 +56,5 @@ def do_move(board, first=False):
     do_move(board)
 
 
-def get_board():
-    # TODO - Make a faster method for getting the board (idk man)
-    # Google
-    board = google.get_board()
-    if board:
-        return board
-
-
 if __name__ == "__main__":
-    print("Scanning for Minesweeper boards...")
-    m_board = get_board()  # Automatically gets the correct board type
-    if m_board is None:
-        print("No board could be found! Make sure the app is all on screen.")
-    else:
-        print("{0} board detected! Beginning solver.".format(m_board.name))
-        do_move(m_board, True)
+    main()

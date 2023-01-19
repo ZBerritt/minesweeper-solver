@@ -8,7 +8,8 @@ class Board:
         # Generates empty board
         self.horizontal_tiles = horizontal_tiles
         self.vertical_tiles = vertical_tiles
-        self.board = [[Tile(None, False) for i in range(self.horizontal_tiles)] for i in range(self.vertical_tiles)]
+        self.board = [[Tile(None, False) for _ in range(self.horizontal_tiles)]
+                      for _ in range(self.vertical_tiles)]  # Create an empty board of tiles
 
     def populate_board(self, values):
         for y in range(len(values)):
@@ -82,6 +83,7 @@ class Board:
                     break
         return tiles
 
+    # Undiscovered tiles that border a known tile
     def get_undiscovered_borders(self):
         tiles = []
         all_tiles = self.get_all_tiles()
@@ -96,6 +98,7 @@ class Board:
                     break
         return tiles
 
+    # Remaining # of mines surrounding a space
     def remaining_nearby_mines(self, x, y):
         tile = self.get_space(x, y)
         if tile.value is None:

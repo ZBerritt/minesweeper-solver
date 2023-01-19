@@ -37,4 +37,4 @@ def get_next_moves(board, first=False):
 
     # TODO: Probability Algorithm
 
-    return None
+    return None  # No moves could be made.
