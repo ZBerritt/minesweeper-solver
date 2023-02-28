@@ -3,7 +3,7 @@ import pyautogui
 from minesweeper_solver import virtual_board
 
 # Fix for duel monitors
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 from functools import partial
 
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)

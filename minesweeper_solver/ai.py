@@ -1,9 +1,11 @@
 # Not a real AI but it sounds cooler
 import random
 
+from minesweeper_solver.virtual_board import Board
+
 
 # Returns - {(x, y, action (0 Flag, 1 Click), ...} OR None if no moves were found.
-def get_next_moves(board, first=False):
+def get_next_moves(board: Board, first=False) -> set:
     # Return a random space if it's the first move
     if first:
         tiles = board.get_empty_tiles()

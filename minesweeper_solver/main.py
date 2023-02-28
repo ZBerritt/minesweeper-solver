@@ -4,6 +4,7 @@ import pyautogui
 
 from minesweeper_solver import ai
 from minesweeper_solver.games import google
+from minesweeper_solver.virtual_board import Board
 
 
 def main():
@@ -24,7 +25,7 @@ def get_board():
         return board
 
 
-def do_move(board, first=False, flags=False):
+def do_move(board: Board, first=False, flags=False):
     # Test for any end conditions
     end_condition = board.game_over()
     if end_condition == 1:
