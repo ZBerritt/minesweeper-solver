@@ -1,5 +1,5 @@
-from minesweeper_solver.game import Game, get_screen
-from minesweeper_solver.util import near_same_color
+from game import Game, get_screen
+from util import near_same_color
 
 
 # TODO - Get board that's partially complete

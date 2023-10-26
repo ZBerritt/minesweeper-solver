@@ -2,9 +2,9 @@ import time
 
 import pyautogui
 
-from minesweeper_solver import ai
-from minesweeper_solver.games import google
-from minesweeper_solver.virtual_board import Board
+import ai
+from games import google
+from virtual_board import Board
 
 
 def main():

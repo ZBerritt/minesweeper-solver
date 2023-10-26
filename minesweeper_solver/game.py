@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 import pyautogui
-from minesweeper_solver import virtual_board
+import virtual_board
 
 # Fix for duel monitors
 from PIL import ImageGrab, Image

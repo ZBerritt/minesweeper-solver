@@ -1,7 +1,7 @@
 # Not a real AI but it sounds cooler
 import random
 
-from minesweeper_solver.virtual_board import Board
+from virtual_board import Board
 
 
 # Returns - {(x, y, action (0 Flag, 1 Click), ...} OR None if no moves were found.
