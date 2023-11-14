@@ -1,51 +1,60 @@
-# Not a real AI but it sounds cooler
 import random
 
 from virtual_board import Board
 
+CLICK_ACTION = 1
+FLAG_ACTION = 0
 
-# Returns - {(x, y, action (0 Flag, 1 Click), ...} OR None if no moves were found.
+# Returns - Set of (x, y, action [0 Flag, 1 Click])
 def get_next_moves(board: Board, first=False) -> set:
-    # Return a random space if it's the first move
     if first:
-        tiles = board.get_empty_tiles()
-        if not tiles:
-            return None
-        random_tile = random.choice(tiles)
-        return {(random_tile[0], random_tile[1], 1)}
+        return get_random_move(board)
+    
+    basic_moves = basic_algorithm(board)
+    if (len(basic_moves) > 0):
+        return basic_moves
+    
+    return prob_algorithm()
 
-    # Moves to return
+def get_random_move(board: Board) -> set:
     moves = set()
+    tiles = board.get_undiscovered_tiles()
+    if tiles:
+        random_tile = random.choice(tiles)
+        moves.add((random_tile.x, random_tile.y, CLICK_ACTION))
+    return moves
 
-    # Basic Algorithm
-    # Super quick but doesn't always find a solution
+
+# Standard Minesweeper Algortim
+def basic_algorithm(board: Board) -> set:
+    moves = set()
     for tile in board.get_border_tiles():
-        remaining_mines = board.remaining_nearby_mines(tile[0], tile[1])
-        surrounding = board.get_surrounding_tiles(tile[0], tile[1])
-        unrevealed_surrounding = [t for t in surrounding if t[2].value is None]
+        remaining_mines = board.remaining_nearby_mines(tile)
+        surrounding = board.get_surrounding_tiles(tile)
+        unrevealed_surrounding = [t for t in surrounding if t.value is None]
         chance_of_mine = remaining_mines / len(unrevealed_surrounding)
         for space in unrevealed_surrounding:
             if chance_of_mine == 1:
-                moves.update([(space[0], space[1], 0)])
+                moves.add((space.x, space.y, FLAG_ACTION))
             elif chance_of_mine == 0:
-                moves.update([(space[0], space[1], 1)])
-    if moves:
-        return moves
+                moves.add((space.x, space.y, CLICK_ACTION))
+    return moves
 
-    # TODO: Standard Algorithm
-    # Uses some extra tricks to find any guaranteed mines or safe spaces
-
-    # Probability Algorithm - Guessing is the best tactic :)
+# Guess the best possible move remaining
+def prob_algorithm(board: Board) -> set:
+    moves = set()
     width = board.horizontal_tiles
     height = board.vertical_tiles
     probabilities = [[-1 for _ in range(width)] for _ in range(height)]
+    
+    # Calculate Probabilities
     for tile in board.get_undiscovered_borders():
         num_adjacent_mines = 0
         num_adjacent_unknowns = 0
-        for sur_tile in board.get_surrounding_tiles(tile[0], tile[1]):
-            if sur_tile[2].value == -1:
+        for sur_tile in board.get_surrounding_tiles(tile):
+            if sur_tile.value == -1:
                 num_adjacent_mines += 1
-            elif sur_tile[2].value is None:
+            elif sur_tile.value is None and not sur_tile.value == -1:
                 num_adjacent_unknowns += 1
         # Count the number of adjacent mines and unknown cells.
 
@@ -60,6 +69,5 @@ def get_next_moves(board: Board, first=False) -> set:
             if probabilities[row][col] > max_probability:
                 max_probability = probabilities[row][col]
                 best_move = (col, row, 1)
-    print("I think ({0}, {1}) is safe...".format(best_move[0], best_move[1]))
     moves.add(best_move)
     return moves
