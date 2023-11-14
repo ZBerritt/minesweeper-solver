@@ -12,6 +12,7 @@ Simply run the executable in the windows terminal `./ms_solver`
 
 
 ## Building
+*Make sure python is installed and on the system PATH. Also, install pyinstaller with `pip install pyinstaller`*
 Run the following command in the root directory of the project `pyinstaller .\minesweeper_solver\main.py -F -n ms_solver`
 
 
