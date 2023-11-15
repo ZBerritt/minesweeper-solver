@@ -14,7 +14,7 @@ def get_next_moves(board: Board, first=False) -> set:
     if (len(basic_moves) > 0):
         return basic_moves
     
-    return prob_algorithm()
+    return prob_algorithm(board)
 
 def get_random_move(board: Board) -> set:
     moves = set()

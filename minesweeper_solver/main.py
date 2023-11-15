@@ -1,3 +1,4 @@
+import argparse
 import time
 
 import pyautogui
@@ -8,13 +9,15 @@ from virtual_board import Board
 
 
 def main():
+    args = parse_args()
     print("Scanning for Minesweeper boards...")
     m_board = get_board()  # Automatically gets the correct board type
     if m_board is None:
         print("No board could be found! Make sure the app is all on screen.")
     else:
-        print("{0} board detected! Beginning solver.".format(m_board.name))
-        do_move(m_board, True)
+        print(f"{m_board.name} board detected! Beginning solver.")
+        print("Note: To escape, move your cursor to the top-left corner of your screen")
+        do_move(m_board, first=True, flags=args.flags, verbose=args.verbose)
 
 
 def get_board():
@@ -25,7 +28,7 @@ def get_board():
         return board
 
 
-def do_move(board: Board, first=False, flags=False):
+def do_move(board: Board, first=False, flags=False, verbose=False):
     # Test for any end conditions
     end_condition = board.game_over()
     if end_condition == 1:
@@ -44,7 +47,8 @@ def do_move(board: Board, first=False, flags=False):
     clicked = False
     for move in moves:
         x, y, action = move
-        print(f"({x}, {y}) - {'Mine' if action == 0 else 'Safe'}")
+        if verbose:
+            print(f"({x}, {y}) - {'Mine' if action == 0 else 'Safe'}")
         if action == 1:  # Safe
             pyautogui.moveTo(board.get_mouse_position(x, y))
             clicked = True
@@ -63,8 +67,17 @@ def do_move(board: Board, first=False, flags=False):
         board.update()
 
     # Recursion
-    do_move(board)
+    do_move(board, flags=flags, verbose=verbose)
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        prog="Minesweeper Solver",
+        description="A bot for solving the game minesweeper"
+    )
+    parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_true")
+    parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
+
+    return parser.parse_args()
 
 if __name__ == "__main__":
     main()
