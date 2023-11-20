@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+from tkinter import Image
 import pyautogui
 import virtual_board
 
@@ -9,7 +10,7 @@ from functools import partial
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
 
-def get_screen():
+def get_screen() -> Image:
     return pyautogui.screenshot()
 
 
@@ -32,17 +33,17 @@ class Game(ABC):
     def box_count(self) -> int:
         return self.boxes_vertical * self.boxes_horizontal
 
-    def get_mouse_position(self, x, y) -> tuple[int, int]:  # x and y are defined over the board, not the screen (box 1 is {0, 0])
+    def get_mouse_position(self, board_x_pos: int, board_y_pos: int) -> tuple[int, int]:
         # Get the position of the box
-        tr_x_pos = self.top_left[0] + (self.box_dimensions[0] * x)
-        tr_y_pos = self.top_left[1] + (self.box_dimensions[1] * y)
-        x_pos = tr_x_pos + round(self.box_dimensions[0] / 2)
-        y_pos = tr_y_pos + round(self.box_dimensions[1] / 2)
-        return x_pos, y_pos
+        top_right_x_pos = self.top_left[0] + (self.box_dimensions[0] * board_x_pos)
+        top_right_y_pos = self.top_left[1] + (self.box_dimensions[1] * board_y_pos)
+        mouse_x_pos = top_right_x_pos + round(self.box_dimensions[0] / 2)
+        mouse_x_pos = top_right_y_pos + round(self.box_dimensions[1] / 2)
+        return (mouse_x_pos, mouse_x_pos)
 
-    def tile_range(self, x, y) -> tuple[tuple[int, int], tuple[int, int]]:
-        left_x = self.top_left[0] + (self.box_dimensions[0] * x)
-        top_y = self.top_left[1] + (self.box_dimensions[1] * y)
+    def tile_range(self, board_x_pos: int, board_y_pos: int) -> tuple[tuple[int, int], tuple[int, int]]:
+        left_x = self.top_left[0] + (self.box_dimensions[0] * board_x_pos)
+        top_y = self.top_left[1] + (self.box_dimensions[1] * board_y_pos)
         right_x = left_x + self.box_dimensions[0] - 1
         bottom_y = top_y + self.box_dimensions[1] - 1
         return ((left_x, right_x), (top_y, bottom_y))
@@ -55,7 +56,7 @@ class Game(ABC):
 
     # Abstracts
     @abstractmethod
-    def tile_value(self, x, y, screen):
+    def tile_value(self, x: int, y: int, screen: Image) -> int:
         pass
 
     @abstractmethod

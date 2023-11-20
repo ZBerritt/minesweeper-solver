@@ -1,3 +1,4 @@
+from tkinter import Image
 from game import Game, get_screen
 from util import near_same_color
 
@@ -54,7 +55,7 @@ class GoogleBoard(Game):
     def __init__(self, top_left, board_dimensions, box_dimensions):
         super().__init__("Google", top_left, board_dimensions, box_dimensions, 2000)
 
-    def tile_value(self, x, y, screen):
+    def tile_value(self, x: int, y: int, screen: Image) -> int:
         positions = self.tile_range(x, y)
         mid_pixel = screen.getpixel(self.get_mouse_position(x, y))
         tile_area = screen.crop((positions[0][0], positions[1][0], positions[0][1], positions[1][1]))

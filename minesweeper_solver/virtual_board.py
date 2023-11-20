@@ -1,15 +1,9 @@
 # Virtual minesweeper board derived from the browser for simulating and calculations
 from dataclasses import dataclass
 
+FLAGGED = -1
 @dataclass
 class Tile:
-    """
-    Values:
-    None: Undiscovered
-    -1: Flagged Mine
-    0: Empty tile
-    1-8: Numbered tile
-    """
     x: int
     y: int
     value: int
@@ -23,7 +17,7 @@ class Board:
         self.vertical_tiles = vertical_tiles
         self.board = [[Tile(x=i, y=j, value=None, solved=False) for i in range(horizontal_tiles)] for j in range(vertical_tiles)]
 
-    def populate_board(self, values):
+    def populate_board(self, values: list[list[int]]):
         for y in range(len(values)):
             for x in range(len(values[y])):
                 value = values[y][x]
@@ -33,12 +27,12 @@ class Board:
         return self.board[y][x]
 
     def set_value(self, x: int, y: int, value: int):
-        if self.board[y][x].value == -1:
+        if self.board[y][x].value == FLAGGED:
             return
         self.board[y][x].value = value
 
     def set_mine(self, x: int, y: int):
-        self.get_space(x, y).value = -1
+        self.get_space(x, y).value = FLAGGED
 
     def get_surrounding_tiles(self, tile: Tile) -> list[Tile]:
         tiles = []
@@ -84,7 +78,7 @@ class Board:
         tiles = []
         unsolved = self.get_unsolved_tiles()
         for tile in unsolved:
-            if tile.value is None or tile.value == -1:
+            if tile.value is None or tile.value == FLAGGED:
                 continue
             surrounding = self.get_surrounding_tiles(tile)
             for adj_tile in surrounding:
@@ -103,7 +97,7 @@ class Board:
             surrounding = self.get_surrounding_tiles(tile)
             for adj_tile in surrounding:
                 if adj_tile.value is not None \
-                        and adj_tile.value != -1:
+                        and adj_tile.value != FLAGGED:
                     tiles.append(tile)
                     break
         return tiles
@@ -115,4 +109,4 @@ class Board:
         if tile.value == 0:
             return 0
         surrounding = self.get_surrounding_tiles(tile)
-        return tile.value - len([m for m in surrounding if m.value == -1])
+        return tile.value - len([m for m in surrounding if m.value == FLAGGED])
