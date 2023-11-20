@@ -38,8 +38,8 @@ class Game(ABC):
         top_right_x_pos = self.top_left[0] + (self.box_dimensions[0] * board_x_pos)
         top_right_y_pos = self.top_left[1] + (self.box_dimensions[1] * board_y_pos)
         mouse_x_pos = top_right_x_pos + round(self.box_dimensions[0] / 2)
-        mouse_x_pos = top_right_y_pos + round(self.box_dimensions[1] / 2)
-        return (mouse_x_pos, mouse_x_pos)
+        mouse_y_pos = top_right_y_pos + round(self.box_dimensions[1] / 2)
+        return (mouse_x_pos, mouse_y_pos)
 
     def tile_range(self, board_x_pos: int, board_y_pos: int) -> tuple[tuple[int, int], tuple[int, int]]:
         left_x = self.top_left[0] + (self.box_dimensions[0] * board_x_pos)
