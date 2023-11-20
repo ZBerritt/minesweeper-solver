@@ -59,7 +59,7 @@ def prob_algorithm(board: Board) -> set:
         # Count the number of adjacent mines and unknown cells.
 
         if num_adjacent_unknowns != 0:
-            probabilities[tile[1]][tile[0]] = num_adjacent_mines / num_adjacent_unknowns
+            probabilities[tile.y][tile.x] = num_adjacent_mines / num_adjacent_unknowns
         # Calculate the probability that the cell is a mine, given the adjacent cells.
 
     max_probability = -1
