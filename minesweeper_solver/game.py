@@ -3,7 +3,7 @@ import pyautogui
 import virtual_board
 
 # Fix for duel monitors
-from PIL import ImageGrab, Image
+from PIL import ImageGrab
 from functools import partial
 
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
@@ -61,3 +61,4 @@ class Game(ABC):
     @abstractmethod
     def game_over(self):
         pass
+

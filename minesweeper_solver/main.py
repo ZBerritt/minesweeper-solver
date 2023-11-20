@@ -5,28 +5,20 @@ import pyautogui
 
 import ai
 from games import google
+from util import get_board
 from virtual_board import Board
 
 
 def main():
     args = parse_args()
-    print("Scanning for Minesweeper boards...")
-    m_board = get_board()  # Automatically gets the correct board type
+    print("Scanning for Minesweeper board...")
+    m_board = get_board(args.type)
     if m_board is None:
         print("No board could be found! Make sure the app is all on screen.")
     else:
         print(f"{m_board.name} board detected! Beginning solver.")
         print("Note: To escape, move your cursor to the top-left corner of your screen")
         do_move(m_board, first=True, flags=args.flags, verbose=args.verbose)
-
-
-def get_board():
-    # TODO - Make a faster method for getting the board (idk man)
-    # Google
-    board = google.get_board()
-    if board:
-        return board
-
 
 def do_move(board: Board, first=False, flags=False, verbose=False):
     # Test for any end conditions
@@ -74,6 +66,7 @@ def parse_args():
         prog="Minesweeper Solver",
         description="A bot for solving the game minesweeper"
     )
+    parser.add_argument("type", help="The Minesweeper game type", choices=["google"])
     parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_true")
     parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
 
