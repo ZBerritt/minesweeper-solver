@@ -1,56 +1,7 @@
 from tkinter import Image
+from typing import Optional
 from game import Game, get_screen
 from util import near_same_color
-
-
-# TODO - Get board that's partially complete
-def get_board():
-    im = get_screen()
-    top_left = None
-    box_one_bottom_right = None
-    bottom_right = None
-    for y in range(im.height):
-        if bottom_right:
-            break
-
-        if not top_left:
-            for x in range(im.width):
-                pixel = im.getpixel((x, y))
-                if not top_left and near_same_color(pixel, google_colors["light_empty"]):  # Top right of the board
-                    top_left = (x, y)
-                    break
-        elif not box_one_bottom_right:
-            pixel = im.getpixel((top_left[0], y))
-            if near_same_color(pixel, google_colors["dark_empty"]):  # Next box has started
-                for x in range(top_left[0], im.width):  # Skip any x value to the left of the board
-                    pixel = im.getpixel((x, y))
-                    if near_same_color(pixel, google_colors["light_empty"]):  # Box down and right to top left
-                        box_one_bottom_right = (x - 1, y - 1)
-                        break
-                if box_one_bottom_right is None:
-                    return None
-        else:
-            pixel = im.getpixel((top_left[0], y))
-            if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
-                "dark_empty"]):
-                # Bottom of the board is found, need to find bottom right now
-                for x in range(top_left[0], im.width):
-                    pixel = im.getpixel((x, y - 1))
-                    if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel,
-                                                                                                        google_colors[
-                                                                                                            "dark_empty"]):
-                        # Found the left edge on the bottom most pixel
-                        bottom_right = (x - 1, y - 1)
-                        break
-    if not bottom_right:
-        return None
-
-    # Make sure to add + 1 because subtracting the 2 gives the distance rather than the total dimensions
-    board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
-    box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
-    return GoogleBoard(top_left, board_dimensions, box_dimensions)
-
-
 class GoogleBoard(Game):
     def __init__(self, top_left, board_dimensions, box_dimensions):
         super().__init__("Google", top_left, board_dimensions, box_dimensions, 2000)
@@ -92,6 +43,56 @@ class GoogleBoard(Game):
                 if near_same_color(pixel, google_colors["results"], 10):
                     return 2
         return 0
+
+def get_board() -> Optional[GoogleBoard]: 
+    im = get_screen()
+    top_left = find_top_left(im)
+    if not top_left:
+        return None
+    
+    box_one_bottom_right = find_box_one_bottom_right(im, top_left)
+    if not box_one_bottom_right:
+        return None
+    
+    bottom_right = find_bottom_right(im, top_left)
+    if not bottom_right:
+        return None
+
+    board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
+    box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
+    return GoogleBoard(top_left, board_dimensions, box_dimensions)
+
+def find_top_left(image: Image) -> tuple[int, int]:
+    for y in range(image.height):
+        for x in range(image.width):
+            pixel = image.getpixel((x, y))
+            if near_same_color(pixel, google_colors["light_empty"]):
+                return x, y
+    return None
+
+def find_box_one_bottom_right(image: Image, top_left: tuple[int, int]) -> tuple[int, int]:
+    for y in range(top_left[1] + 1, image.height):
+        pixel = image.getpixel((top_left[0], y))
+        if near_same_color(pixel, google_colors["dark_empty"]):
+            for x in range(top_left[0] + 1, image.width):
+                pixel = image.getpixel((x, y - 1))
+                if near_same_color(pixel, google_colors["dark_empty"]):
+                    return x - 1, y - 1
+            return None
+    return None
+
+def find_bottom_right(image: Image, top_left: tuple[int, int]) -> tuple[int, int]:
+    for y in range(top_left[1] + 1, image.height):
+        pixel = image.getpixel((top_left[0], y))
+        if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
+                "dark_empty"]):
+            for x in range(top_left[0] + 1, image.width):
+                pixel = image.getpixel((x, y - 1))
+                if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel,
+                        google_colors["dark_empty"]):
+                    return x - 1, y - 1
+            return None
+    return None
 
 
 google_colors = {
