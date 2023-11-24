@@ -53,17 +53,11 @@ class Board:
         return tiles
 
     def get_all_tiles(self) -> list[Tile]:
-        tiles = []
-        for y in range(self.vertical_tiles):
-            for x in range(self.horizontal_tiles):
-                tile = self.get_space(x, y)
-                tiles.append(tile)
-        return tiles
+        return [self.get_space(x, y) for y in range(self.vertical_tiles) for x in range(self.horizontal_tiles)]
 
     def get_unsolved_tiles(self) -> list[Tile]:
         return [t for t in self.get_all_tiles() if not t.solved]
 
-    # prev - get_undiscovered_tiles
     def get_undiscovered_tiles(self) -> list[Tile]:
         return [t for t in self.get_all_tiles() if t.value is None]
 

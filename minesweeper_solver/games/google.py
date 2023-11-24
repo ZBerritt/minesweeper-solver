@@ -1,5 +1,5 @@
 from tkinter import Image
-from typing import Optional
+from typing import Optional, Type
 from game import Game, get_screen
 from util import near_same_color
 class GoogleBoard(Game):
@@ -44,23 +44,23 @@ class GoogleBoard(Game):
                     return 2
         return 0
 
-def get_board() -> Optional[GoogleBoard]: 
-    im = get_screen()
-    top_left = find_top_left(im)
-    if not top_left:
-        return None
-    
-    box_one_bottom_right = find_box_one_bottom_right(im, top_left)
-    if not box_one_bottom_right:
-        return None
-    
-    bottom_right = find_bottom_right(im, top_left)
-    if not bottom_right:
-        return None
+    def get_board() -> Optional[Type["GoogleBoard"]]: 
+        im = get_screen()
+        top_left = find_top_left(im)
+        if not top_left:
+            return None
+        
+        box_one_bottom_right = find_box_one_bottom_right(im, top_left)
+        if not box_one_bottom_right:
+            return None
+        
+        bottom_right = find_bottom_right(im, top_left)
+        if not bottom_right:
+            return None
 
-    board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
-    box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
-    return GoogleBoard(top_left, board_dimensions, box_dimensions)
+        board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
+        box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
+        return GoogleBoard(top_left, board_dimensions, box_dimensions)
 
 def find_top_left(image: Image) -> tuple[int, int]:
     for y in range(image.height):

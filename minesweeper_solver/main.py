@@ -1,53 +1,58 @@
 import argparse
 import time
-
 import pyautogui
-
 import ai
-from games import google
-from util import get_board
-from virtual_board import Board
+from game import Game
+from game_factory import game_factory
 
 
-def main():
+def solver():
     args = parse_args()
+
     print("Scanning for Minesweeper board...")
-    m_board = get_board(args.type)
-    if m_board is None:
+    game = game_factory(args.type)
+
+    if game is None:
         print("No board could be found! Make sure the app is all on screen.")
-    else:
-        print(f"{m_board.name} board detected! Beginning solver.")
-        print("Note: To escape, move your cursor to the top-left corner of your screen")
-        do_move(m_board, first=True, flags=args.flags, verbose=args.verbose)
+        return
 
-def do_move(board: Board, first=False, flags=False, verbose=False):
-    # Test for any end conditions
-    end_condition = board.game_over()
-    if end_condition == 1:
-        return print("Game Over...")
-    elif end_condition == 2:
-        return print("I win!")
+    print(f"{game.name} board detected! Beginning solver.")
+    print("Note: To escape, move your cursor to the top-left corner of your screen")
 
+    game_status = do_move(game, first=True, flags=args.flags, verbose=args.verbose)
+
+    while game_status == 0:
+        game_status = do_move(game, flags=args.flags, verbose=args.verbose)
+
+    if game_status == 1:
+        print("Game Over...")
+    elif game_status == 2:
+        print("I win!")
+    elif game_status == 3:
+        print("No more moves can be found...")
+
+def do_move(game: Game, first=False, flags=False, verbose=False) -> int:
     # Move Setup
-    virtual_board = board.virtual_board
-    virtual_board.solve_tiles()  # Speed up the algorithm by ignoring tiles that don't matter
+    virtual_board = game.virtual_board
+    virtual_board.solve_tiles()
 
     # Execute next move
-    moves = ai.get_next_moves(board.virtual_board, first)
+    moves = ai.get_next_moves(virtual_board, first)
     if moves is None:
-        return print("No more moves can be found...")
+        return 3
     clicked = False
     for move in moves:
         x, y, action = move
+        mouse_position = game.get_mouse_position(x, y)
         if verbose:
             print(f"({x}, {y}) - {'Mine' if action == 0 else 'Safe'}")
         if action == 1:  # Safe
-            pyautogui.moveTo(board.get_mouse_position(x, y))
+            pyautogui.moveTo(mouse_position)
             clicked = True
             pyautogui.click(button="left")
         else:  # Mine
             if flags:
-                pyautogui.moveTo(board.get_mouse_position(x, y))
+                pyautogui.moveTo(mouse_position)
                 clicked = True
                 pyautogui.click(button="right")
             virtual_board.set_mine(x, y)  # Manually set the mine, solver ignores flags
@@ -55,11 +60,11 @@ def do_move(board: Board, first=False, flags=False, verbose=False):
     # Cleanup & Updates
     if clicked:
         pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
-        time.sleep(board.move_delay / 1000)  # Google's animations make it hard to detect updates at an instant
-        board.update()
+        time.sleep(game.move_delay / 1000)  # Google's animations make it hard to detect updates at an instant
+        game.update()
 
     # Recursion
-    do_move(board, flags=flags, verbose=verbose)
+    return game.game_over()
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -73,4 +78,4 @@ def parse_args():
     return parser.parse_args()
 
 if __name__ == "__main__":
-    main()
+    solver()

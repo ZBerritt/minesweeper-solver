@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABC
 from tkinter import Image
+from typing import Optional, Type
 import pyautogui
 import virtual_board
 
@@ -39,14 +40,14 @@ class Game(ABC):
         top_right_y_pos = self.top_left[1] + (self.box_dimensions[1] * board_y_pos)
         mouse_x_pos = top_right_x_pos + round(self.box_dimensions[0] / 2)
         mouse_y_pos = top_right_y_pos + round(self.box_dimensions[1] / 2)
-        return (mouse_x_pos, mouse_y_pos)
+        return mouse_x_pos, mouse_y_pos
 
     def tile_range(self, board_x_pos: int, board_y_pos: int) -> tuple[tuple[int, int], tuple[int, int]]:
         left_x = self.top_left[0] + (self.box_dimensions[0] * board_x_pos)
         top_y = self.top_left[1] + (self.box_dimensions[1] * board_y_pos)
         right_x = left_x + self.box_dimensions[0] - 1
         bottom_y = top_y + self.box_dimensions[1] - 1
-        return ((left_x, right_x), (top_y, bottom_y))
+        return (left_x, right_x), (top_y, bottom_y)
 
     def update(self):
         screen = get_screen()
@@ -60,6 +61,9 @@ class Game(ABC):
         pass
 
     @abstractmethod
-    def game_over(self):
+    def game_over(self) -> int:
         pass
 
+    @abstractmethod
+    def get_board(self) -> Optional[Type["Game"]]:
+        pass
