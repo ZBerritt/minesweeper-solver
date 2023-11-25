@@ -19,7 +19,7 @@ def solver():
     print(f"{game.name} board detected! Beginning solver.")
     print("Note: To escape, move your cursor to the top-left corner of your screen")
 
-    game_status = do_move(game, first=True, flags=args.flags, verbose=args.verbose)
+    game_status = do_move(game, flags=args.flags, verbose=args.verbose)
 
     while game_status == 0:
         game_status = do_move(game, flags=args.flags, verbose=args.verbose)
@@ -31,13 +31,13 @@ def solver():
     elif game_status == 3:
         print("No more moves can be found...")
 
-def do_move(game: Game, first=False, flags=False, verbose=False) -> int:
+def do_move(game: Game, flags=False, verbose=False) -> int:
     # Move Setup
     virtual_board = game.virtual_board
     virtual_board.solve_tiles()
 
     # Execute next move
-    moves = ai.get_next_moves(virtual_board, first)
+    moves = ai.get_next_moves(virtual_board)
     if moves is None:
         return 3
     clicked = False

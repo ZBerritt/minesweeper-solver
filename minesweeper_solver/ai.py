@@ -6,12 +6,12 @@ CLICK_ACTION = 1
 FLAG_ACTION = 0
 
 # Returns - Set of (x, y, action [0 Flag, 1 Click])
-def get_next_moves(board: Board, first=False) -> set:
-    if first:
+def get_next_moves(board: Board) -> set:
+    if all(tile.value == None for tile in board.get_all_tiles()):
         return get_random_move(board)
     
     basic_moves = basic_algorithm(board)
-    if (len(basic_moves) > 0):
+    if len(basic_moves) > 0:
         return basic_moves
     
     return prob_algorithm(board)
@@ -40,34 +40,22 @@ def basic_algorithm(board: Board) -> set:
                 moves.add((space.x, space.y, CLICK_ACTION))
     return moves
 
-# Guess the best possible move remaining
 def prob_algorithm(board: Board) -> set:
-    moves = set()
-    width = board.horizontal_tiles
-    height = board.vertical_tiles
-    probabilities = [[-1 for _ in range(width)] for _ in range(height)]
-    
-    # Calculate Probabilities
-    for tile in board.get_undiscovered_borders():
+    borders = board.get_undiscovered_borders()
+    probabilities = [-1 for _ in borders]
+    for tile in borders:
+        index = borders.index(tile)
         num_adjacent_mines = 0
         num_adjacent_unknowns = 0
         for sur_tile in board.get_surrounding_tiles(tile):
             if sur_tile.value == -1:
                 num_adjacent_mines += 1
-            elif sur_tile.value is None and not sur_tile.value == -1:
+            elif sur_tile.value is None:
                 num_adjacent_unknowns += 1
-        # Count the number of adjacent mines and unknown cells.
 
         if num_adjacent_unknowns != 0:
-            probabilities[tile.y][tile.x] = num_adjacent_mines / num_adjacent_unknowns
-        # Calculate the probability that the cell is a mine, given the adjacent cells.
-
-    max_probability = -1
-    best_move = None
-    for row in range(height):
-        for col in range(width):
-            if probabilities[row][col] > max_probability:
-                max_probability = probabilities[row][col]
-                best_move = (col, row, 1)
-    moves.add(best_move)
-    return moves
+            probabilities[index] = num_adjacent_mines / num_adjacent_unknowns
+    
+    best_tile = borders[probabilities.index(max(probabilities))]
+    return set([(best_tile.x, best_tile.y, CLICK_ACTION)])
+    
