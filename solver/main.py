@@ -1,9 +1,9 @@
 import argparse
 import time
 import pyautogui
-import ai
-from game import Game
-from game_factory import game_factory
+from games.game import Game
+from board.ai import get_next_moves
+from utils.game_factory import game_factory
 
 
 def solver():
@@ -37,7 +37,7 @@ def do_move(game: Game, flags=False, verbose=False) -> int:
     virtual_board.solve_tiles()
 
     # Execute next move
-    moves = ai.get_next_moves(virtual_board)
+    moves = get_next_moves(virtual_board)
     if moves is None:
         return 3
     clicked = False

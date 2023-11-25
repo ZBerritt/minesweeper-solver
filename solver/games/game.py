@@ -2,12 +2,11 @@ from abc import abstractmethod, ABC
 from tkinter import Image
 from typing import Optional, Type
 import pyautogui
-import virtual_board
+from board import virtual_board
 
-# Fix for duel monitors
+# Fix for multiple monitors
 from PIL import ImageGrab
 from functools import partial
-
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
 

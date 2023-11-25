@@ -1,6 +1,5 @@
 import random
-
-from virtual_board import Board
+from board.virtual_board import Board
 
 CLICK_ACTION = 1
 FLAG_ACTION = 0
