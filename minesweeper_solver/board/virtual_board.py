@@ -18,9 +18,8 @@ class Board:
         self.board = [[Tile(x=i, y=j, value=None, solved=False) for i in range(horizontal_tiles)] for j in range(vertical_tiles)]
 
     def populate_board(self, values: list[list[int]]):
-        for y in range(len(values)):
-            for x in range(len(values[y])):
-                value = values[y][x]
+        for y, row in enumerate(values):
+            for x, value in enumerate(row):
                 self.set_value(x, y, Tile(value))
 
     def get_space(self, x: int, y: int) -> Tile:

@@ -1,10 +1,13 @@
 import random
+from enum import Enum
 from board.virtual_board import Board
 
-CLICK_ACTION = 1
-FLAG_ACTION = 0
 
-# Returns - Set of (x, y, action [0 Flag, 1 Click])
+class Action(Enum):
+    CLICK = 1
+    FLAG = 0
+
+# Returns - Set of (x, y, action)
 def get_next_moves(board: Board) -> set:
     if all(tile.value == None for tile in board.get_all_tiles()):
         return get_random_move(board)
@@ -20,7 +23,7 @@ def get_random_move(board: Board) -> set:
     tiles = board.get_undiscovered_tiles()
     if tiles:
         random_tile = random.choice(tiles)
-        moves.add((random_tile.x, random_tile.y, CLICK_ACTION))
+        moves.add((random_tile.x, random_tile.y, Action.CLICK))
     return moves
 
 
@@ -34,16 +37,15 @@ def basic_algorithm(board: Board) -> set:
         chance_of_mine = remaining_mines / len(unrevealed_surrounding)
         for space in unrevealed_surrounding:
             if chance_of_mine == 1:
-                moves.add((space.x, space.y, FLAG_ACTION))
+                moves.add((space.x, space.y, Action.FLAG))
             elif chance_of_mine == 0:
-                moves.add((space.x, space.y, CLICK_ACTION))
+                moves.add((space.x, space.y, Action.CLICK))
     return moves
 
 def prob_algorithm(board: Board) -> set:
     borders = board.get_undiscovered_borders()
     probabilities = [-1 for _ in borders]
-    for tile in borders:
-        index = borders.index(tile)
+    for i, tile in enumerate(borders):
         num_adjacent_mines = 0
         num_adjacent_unknowns = 0
         for sur_tile in board.get_surrounding_tiles(tile):
@@ -53,8 +55,8 @@ def prob_algorithm(board: Board) -> set:
                 num_adjacent_unknowns += 1
 
         if num_adjacent_unknowns != 0:
-            probabilities[index] = num_adjacent_mines / num_adjacent_unknowns
+            probabilities[i] = num_adjacent_mines / num_adjacent_unknowns
     
-    best_tile = borders[probabilities.index(max(probabilities))]
-    return set([(best_tile.x, best_tile.y, CLICK_ACTION)])
+    best_tile = max(zip(borders, probabilities), key=lambda x: x[1], default=(None, -1))[0]
+    return set([(best_tile.x, best_tile.y, Action.CLICK)]) if best_tile else set()
     
