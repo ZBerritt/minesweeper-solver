@@ -6,15 +6,15 @@ A CLI bot for beating Minesweeper
 - Windows XP (W.I.P.)
 
 ## Running
-Simply run the executable in the windows terminal `./ms_solver`
-
-*Note: At the moment, certain antiviruses detect this application as a virus. This is currently being worked on...*
-
+Simply run the executable in the windows terminal `./minesweeper_solver [game]`
 
 ## Building
-*Make sure python is installed and on the system PATH. Also, install pyinstaller with `pip install pyinstaller`*
+Minesweeper Solver uses Nuitka to build for performance purposes **Nuitka currently only supports up to Python 3.11**
 
-Run the following command in the root directory of the project `pyinstaller .\minesweeper_solver\main.py -F -n ms_solver`
+1. Clone the git repository `git clone https://github.com/ZBerritt/minesweeper-solver.git`
+2. Move into the directory `cd minesweeper-solver`
+3. Install Requirements using `pip install -r requirements.txt`
+4. Run the build script `python buildscript.py`. This may prompt you to install a C compiler if you don't have one.
 
 
 
