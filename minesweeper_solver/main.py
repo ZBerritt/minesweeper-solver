@@ -2,7 +2,7 @@ import argparse
 import time
 import pyautogui
 from games.game import Game
-from board.ai import get_next_moves
+from board.ai import Action, get_next_moves
 from utils.game_factory import game_factory
 
 
@@ -38,7 +38,7 @@ def do_move(game: Game, flags=False, verbose=False) -> int:
 
     # Execute next move
     moves = get_next_moves(virtual_board)
-    if moves is None:
+    if not moves:
         return 3
     clicked = False
     for move in moves:
@@ -46,7 +46,7 @@ def do_move(game: Game, flags=False, verbose=False) -> int:
         mouse_position = game.get_mouse_position(x, y)
         if verbose:
             print(f"({x}, {y}) - {'Mine' if action == 0 else 'Safe'}")
-        if action == 1:  # Safe
+        if action == Action.CLICK:  # Safe
             pyautogui.moveTo(mouse_position)
             clicked = True
             pyautogui.click(button="left")

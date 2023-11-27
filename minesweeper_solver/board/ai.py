@@ -8,7 +8,7 @@ class Action(Enum):
     FLAG = 0
 
 # Returns - Set of (x, y, action)
-def get_next_moves(board: Board) -> set:
+def get_next_moves(board: Board) -> set[tuple[int, int, Enum]]:
     if all(tile.value == None for tile in board.get_all_tiles()):
         return get_random_move(board)
     
