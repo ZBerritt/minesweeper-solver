@@ -3,7 +3,7 @@ import time
 import pyautogui
 from games.game import Game
 from board.ai import Action, get_next_moves
-from utils.game_factory import game_factory
+from games.game_factory import game_factory
 
 
 def solver():
