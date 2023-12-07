@@ -1,6 +1,7 @@
 from tkinter import Image
 from typing import Optional, Type
-from games.game import Game, get_screen
+from games.game import Game
+from utils.screenshot import screenshot
 from utils.helpers import near_same_color
 
 class GoogleBoard(Game):
@@ -36,7 +37,7 @@ class GoogleBoard(Game):
 
     # Returns 1 if a loss is detected, returns 2 if a win is detected, returns 0 otherwise
     def status(self):
-        screen = get_screen()
+        screen = screenshot()
         for y in range(self.boxes_vertical):
             for x in range(self.boxes_horizontal):
                 pos = self.get_mouse_position(x, y)
@@ -46,7 +47,7 @@ class GoogleBoard(Game):
         return 0
 
     def get_board() -> Optional[Type["GoogleBoard"]]: 
-        im = get_screen()
+        im = screenshot()
         top_left = find_top_left(im)
         if not top_left:
             return None
