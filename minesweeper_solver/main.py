@@ -60,7 +60,7 @@ def do_move(game: Game, flags=False, verbose=False, delay=0) -> int:
     # Cleanup & Updates
     if clicked:
         pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
-        time.sleep(delay / 1000)  # Google's animations make it hard to detect updates at an instant
+        time.sleep(delay / 1000)  
         game.update()
 
     # Recursion
@@ -74,7 +74,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("type", help="The Minesweeper game type", choices=["google"])
     parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_true")
     parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
-    parser.add_argument("-d", "--delay", help="Delay in milliseconds before each next move (can help with boards with animations)", type=int, default=2000)
+    parser.add_argument("-d", "--delay", help="Delay in milliseconds before each next move (can help with boards with animations)", type=int, default=0)
 
     return parser.parse_args()
 
