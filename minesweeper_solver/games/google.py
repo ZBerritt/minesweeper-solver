@@ -35,7 +35,7 @@ class GoogleBoard(Game):
         return None
 
     # Returns 1 if a loss is detected, returns 2 if a win is detected, returns 0 otherwise
-    def game_over(self):
+    def status(self):
         screen = get_screen()
         for y in range(self.boxes_vertical):
             for x in range(self.boxes_horizontal):

@@ -59,7 +59,7 @@ class Game(ABC):
         pass
 
     @abstractmethod
-    def game_over(self) -> int:
+    def status(self) -> int:
         pass
 
     @abstractmethod

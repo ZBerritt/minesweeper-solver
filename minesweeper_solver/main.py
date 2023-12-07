@@ -40,31 +40,25 @@ def do_move(game: Game, flags=False, verbose=False, delay=0) -> int:
     moves = get_next_moves(virtual_board)
     if not moves:
         return 3
-    clicked = False
     for move in moves:
-        x, y, action = move
-        mouse_position = game.get_mouse_position(x, y)
+        board_x, board_y, action = move
+        screen_x, screen_y = game.get_mouse_position(board_x, board_y)
+
         if verbose:
-            print(f"({x}, {y}) - {'Mine' if action == 0 else 'Safe'}")
-        if action == Action.CLICK:  # Safe
-            pyautogui.moveTo(mouse_position)
-            clicked = True
-            pyautogui.click(button="left")
-        else:  # Mine
+            print(f"({board_x}, {board_y}) - {'Mine' if action == Action.FLAG else 'Safe'}")
+            
+        if action == Action.CLICK:
+            pyautogui.click(x=screen_x, y=screen_y, button="left")
+        elif action == Action.FLAG:
+            virtual_board.set_mine(board_x, board_y)
             if flags:
-                pyautogui.moveTo(mouse_position)
-                clicked = True
-                pyautogui.click(button="right")
-            virtual_board.set_mine(x, y)  # Manually set the mine, solver ignores flags
+                pyautogui.click(x=screen_x, y=screen_y, button="right")
 
     # Cleanup & Updates
-    if clicked:
-        pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
-        time.sleep(delay / 1000)  
-        game.update()
-
-    # Recursion
-    return game.game_over()
+    pyautogui.moveTo(1, 1)  # Get that mouse outta here!
+    time.sleep(delay / 1000)
+    game.update()
+    return game.status()
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
