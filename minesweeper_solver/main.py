@@ -19,10 +19,10 @@ def solver():
     print(f"{game.name} board detected! Beginning solver.")
     print("Note: To escape, move your cursor to the top-left corner of your screen")
 
-    game_status = do_move(game, flags=args.flags, verbose=args.verbose)
+    game_status = do_move(game, flags=args.flags, verbose=args.verbose, delay=args.delay)
 
     while game_status == 0:
-        game_status = do_move(game, flags=args.flags, verbose=args.verbose)
+        game_status = do_move(game, flags=args.flags, verbose=args.verbose, delay=args.delay)
 
     if game_status == 1:
         print("Game Over...")
@@ -31,7 +31,7 @@ def solver():
     elif game_status == 3:
         print("No more moves can be found...")
 
-def do_move(game: Game, flags=False, verbose=False) -> int:
+def do_move(game: Game, flags=False, verbose=False, delay=0) -> int:
     # Move Setup
     virtual_board = game.virtual_board
     virtual_board.solve_tiles()
@@ -60,13 +60,13 @@ def do_move(game: Game, flags=False, verbose=False) -> int:
     # Cleanup & Updates
     if clicked:
         pyautogui.moveTo(1, 1)  # Move the mouse out of the way so the detection algorithm works fine
-        time.sleep(game.move_delay / 1000)  # Google's animations make it hard to detect updates at an instant
+        time.sleep(delay / 1000)  # Google's animations make it hard to detect updates at an instant
         game.update()
 
     # Recursion
     return game.game_over()
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="Minesweeper Solver",
         description="A bot for solving the game minesweeper"
@@ -74,6 +74,7 @@ def parse_args():
     parser.add_argument("type", help="The Minesweeper game type", choices=["google"])
     parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_true")
     parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
+    parser.add_argument("-d", "--delay", help="Delay in milliseconds before each next move (can help with boards with animations)", type=int, default=2000)
 
     return parser.parse_args()
 

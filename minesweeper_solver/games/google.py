@@ -5,7 +5,7 @@ from utils.helpers import near_same_color
 
 class GoogleBoard(Game):
     def __init__(self, top_left, board_dimensions, box_dimensions):
-        super().__init__("Google", top_left, board_dimensions, box_dimensions, 2000)
+        super().__init__("Google", top_left, board_dimensions, box_dimensions)
 
     def tile_value(self, x: int, y: int, screen: Image) -> int:
         positions = self.tile_range(x, y)
