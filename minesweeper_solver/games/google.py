@@ -1,4 +1,4 @@
-from tkinter import Image
+from PIL import Image
 from typing import Optional, Type
 from games.game import Game
 from utils.screenshot import screenshot
@@ -29,9 +29,9 @@ class GoogleBoard(Game):
                 return 5
             elif near_same_color(color, google_colors["six"], 10):
                 return 6
-
-        if near_same_color(mid_pixel, google_colors["light_open"]) or near_same_color(mid_pixel,
-                                                                                      google_colors["dark_open"]):
+        if near_same_color(mid_pixel, google_colors["light_undiscovered"], 10) or near_same_color(mid_pixel, google_colors["dark_undiscovered"], 10):
+            return None
+        if near_same_color(mid_pixel, google_colors["light_empty"], 10) or near_same_color(mid_pixel, google_colors["dark_empty"], 10):
             return 0
         return None
 
@@ -68,17 +68,17 @@ def find_top_left(image: Image) -> tuple[int, int]:
     for y in range(image.height):
         for x in range(image.width):
             pixel = image.getpixel((x, y))
-            if near_same_color(pixel, google_colors["light_empty"]):
+            if near_same_color(pixel, google_colors["light_undiscovered"]):
                 return x, y
     return None
 
 def find_box_one_bottom_right(image: Image, top_left: tuple[int, int]) -> tuple[int, int]:
     for y in range(top_left[1] + 1, image.height):
         pixel = image.getpixel((top_left[0], y))
-        if near_same_color(pixel, google_colors["dark_empty"]):
+        if near_same_color(pixel, google_colors["dark_undiscovered"]):
             for x in range(top_left[0] + 1, image.width):
                 pixel = image.getpixel((x, y - 1))
-                if near_same_color(pixel, google_colors["dark_empty"]):
+                if near_same_color(pixel, google_colors["dark_undiscovered"]):
                     return x - 1, y - 1
             return None
     return None
@@ -86,22 +86,22 @@ def find_box_one_bottom_right(image: Image, top_left: tuple[int, int]) -> tuple[
 def find_bottom_right(image: Image, top_left: tuple[int, int]) -> tuple[int, int]:
     for y in range(top_left[1] + 1, image.height):
         pixel = image.getpixel((top_left[0], y))
-        if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel, google_colors[
-                "dark_empty"]):
+        if not near_same_color(pixel, google_colors["light_undiscovered"]) and not near_same_color(pixel, google_colors[
+                "dark_undiscovered"]):
             for x in range(top_left[0] + 1, image.width):
                 pixel = image.getpixel((x, y - 1))
-                if not near_same_color(pixel, google_colors["light_empty"]) and not near_same_color(pixel,
-                        google_colors["dark_empty"]):
+                if not near_same_color(pixel, google_colors["light_undiscovered"]) and not near_same_color(pixel,
+                        google_colors["dark_undiscovered"]):
                     return x - 1, y - 1
             return None
     return None
 
 
 google_colors = {
-    "light_empty": [(170, 215, 81)],
-    "dark_empty": [(162, 209, 73)],
-    "light_open": [(224, 195, 163)],
-    "dark_open": [(211, 185, 157)],
+    "light_undiscovered": [(170, 215, 81)],
+    "dark_undiscovered": [(162, 209, 73)],
+    "light_empty": [(224, 195, 163)],
+    "dark_empty": [(211, 185, 157)],
     "border": [(126, 164, 53)],
     "flag": [(242, 54, 7), (230, 51, 7)],
     "results": [(77, 193, 249)],

@@ -13,10 +13,11 @@ def get_next_moves(board: Board) -> set[tuple[int, int, Enum]]:
         return get_random_move(board)
     
     basic_moves = basic_algorithm(board)
-    if len(basic_moves) > 0:
+    if basic_moves:
         return basic_moves
     
-    return prob_algorithm(board)
+    return set()
+    # return prob_algorithm(board)
 
 def get_random_move(board: Board) -> set:
     moves = set()
@@ -42,6 +43,7 @@ def basic_algorithm(board: Board) -> set:
                 moves.add((space.x, space.y, Action.CLICK))
     return moves
 
+# Todo - i think this is bugged
 def prob_algorithm(board: Board) -> set:
     borders = board.get_undiscovered_borders()
     probabilities = [-1 for _ in borders]

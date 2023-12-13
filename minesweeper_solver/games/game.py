@@ -42,11 +42,11 @@ class Game(ABC):
         bottom_y = top_y + self.box_dimensions[1] - 1
         return (left_x, right_x), (top_y, bottom_y)
 
-    def update(self):
+    def update(self) -> bool:
         screen = screenshot()
         tiles = self.virtual_board.get_undiscovered_tiles()
-        for tile in tiles:
-            self.virtual_board.set_value(tile.x, tile.y, self.tile_value(tile.x, tile.y, screen))
+        return any([self.virtual_board.set_value(tile.x, tile.y, self.tile_value(tile.x, tile.y, screen)) for tile in tiles])
+            
 
     # Abstracts
     @abstractmethod

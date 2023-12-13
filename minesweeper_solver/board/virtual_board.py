@@ -25,10 +25,11 @@ class Board:
     def get_space(self, x: int, y: int) -> Tile:
         return self.board[y][x]
 
-    def set_value(self, x: int, y: int, value: int):
-        if self.board[y][x].value == FLAGGED:
-            return
+    def set_value(self, x: int, y: int, value: int) -> bool:
+        if self.board[y][x].value != None:
+            return False
         self.board[y][x].value = value
+        return True
 
     def set_mine(self, x: int, y: int):
         self.get_space(x, y).value = FLAGGED

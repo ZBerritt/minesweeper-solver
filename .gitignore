@@ -220,3 +220,4 @@ pip-selfcheck.json
 
 ## Nuitka Output Directory
 output/
+test.bat

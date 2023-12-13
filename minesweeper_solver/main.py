@@ -5,6 +5,7 @@ from games.game import Game
 from board.ai import Action, get_next_moves
 from games.game_factory import game_factory
 
+MAX_RETRIES = 3
 
 def solver():
     args = parse_args()
@@ -37,7 +38,15 @@ def do_move(game: Game, flags=False, verbose=False, delay=0) -> int:
     virtual_board.solve_tiles()
 
     # Execute next move
-    moves = get_next_moves(virtual_board)
+    moves = None
+    tries = 0
+    while not moves and tries < MAX_RETRIES:
+        curr_delay = 1 if tries else  delay / 1000
+        time.sleep(curr_delay)
+        pyautogui.moveTo(1, 1)
+        game.update()
+        moves = get_next_moves(virtual_board)
+        tries += 1
     if not moves:
         return 3
     for move in moves:
@@ -53,11 +62,6 @@ def do_move(game: Game, flags=False, verbose=False, delay=0) -> int:
             virtual_board.set_mine(board_x, board_y)
             if flags:
                 pyautogui.click(x=screen_x, y=screen_y, button="right")
-
-    # Cleanup & Updates
-    pyautogui.moveTo(1, 1)  # Get that mouse outta here!
-    time.sleep(delay / 1000)
-    game.update()
     return game.status()
 
 def parse_args() -> argparse.Namespace:
