@@ -11,13 +11,14 @@ Game: Represents and arbitrary game board that is shown on the screen
 - box_dimensions: The full dimensions of a singular box (length, height)
 """
 class Game(ABC):
-    def __init__(self, name, position, dimensions, box_dimensions):
+    def __init__(self, name, position, dimensions, box_dimensions, delay):
         self.name = name
         self.position = position
         self.dimensions = dimensions
         self.box_dimensions = box_dimensions
         self.boxes_horizontal = int(self.dimensions[0] / self.box_dimensions[0])
         self.boxes_vertical = int(self.dimensions[1] / self.box_dimensions[1])
+        self.delay = delay
 
         # Get virtual board
         self.virtual_board = Board(self.boxes_horizontal, self.boxes_vertical)
