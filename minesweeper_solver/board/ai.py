@@ -1,6 +1,6 @@
 import random
 from enum import Enum
-from board.virtual_board import Board
+from board.board import Board
 class Action(Enum):
     CLICK = 1
     FLAG = 0

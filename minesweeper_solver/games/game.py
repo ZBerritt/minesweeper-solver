@@ -1,7 +1,7 @@
+from __future__ import annotations
 from abc import abstractmethod, ABC
 from PIL import Image
-from typing import Optional, Type
-from board.virtual_board import Board
+from board.board import Board
 from utils.screenshot import screenshot
 
 """
@@ -9,6 +9,7 @@ Game: Represents and arbitrary game board that is shown on the screen
 - position: The position of the top left of the board
 - dimensions: The full dimensions of the board (length, height)
 - box_dimensions: The full dimensions of a singular box (length, height)
+- delay: Default number of seconds to delay the next move
 """
 class Game(ABC):
     def __init__(self, name, position, dimensions, box_dimensions, delay):
@@ -19,17 +20,13 @@ class Game(ABC):
         self.boxes_horizontal = int(self.dimensions[0] / self.box_dimensions[0])
         self.boxes_vertical = int(self.dimensions[1] / self.box_dimensions[1])
         self.delay = delay
-
-        # Get virtual board
-        self.virtual_board = Board(self.boxes_horizontal, self.boxes_vertical)
-        self.update()
+        self.board = Board(self.boxes_horizontal, self.boxes_vertical)
 
     # Global Game Functions
     def box_count(self) -> int:
         return self.boxes_vertical * self.boxes_horizontal
 
     def get_mouse_position(self, board_x_pos: int, board_y_pos: int) -> tuple[int, int]:
-        # Get the position of the box
         top_right_x_pos = self.position[0] + (self.box_dimensions[0] * board_x_pos)
         top_right_y_pos = self.position[1] + (self.box_dimensions[1] * board_y_pos)
         mouse_x_pos = top_right_x_pos + round(self.box_dimensions[0] / 2)
@@ -43,21 +40,22 @@ class Game(ABC):
         bottom_y = top_y + self.box_dimensions[1] - 1
         return (left_x, right_x), (top_y, bottom_y)
 
-    def update(self) -> bool:
+    def update(self):
         screen = screenshot()
-        tiles = self.virtual_board.get_undiscovered_tiles()
-        return any([self.virtual_board.set_value(tile.x, tile.y, self.tile_value(tile.x, tile.y, screen)) for tile in tiles])
+        tiles = self.board.get_undiscovered_tiles()
+        for tile in tiles:
+            self.board.set_value(tile.x, tile.y, self.tile_value(tile.x, tile.y, screen))
             
-
     # Abstracts
     @abstractmethod
     def tile_value(self, x: int, y: int, screen: Image) -> int:
         pass
-
+    
+    # Returns 1 if a loss is detected, returns 2 if a win is detected, returns 0 otherwise
     @abstractmethod
     def status(self) -> int:
         pass
 
     @abstractmethod
-    def get_board(self) -> Optional[Type["Game"]]:
+    def get_board(self) -> Game:
         pass

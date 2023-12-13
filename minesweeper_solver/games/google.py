@@ -1,5 +1,4 @@
 from PIL import Image
-from typing import Optional, Type
 from games.game import Game
 from utils.screenshot import screenshot
 from utils.helpers import near_same_color
@@ -35,7 +34,6 @@ class GoogleBoard(Game):
             return 0
         return None
 
-    # Returns 1 if a loss is detected, returns 2 if a win is detected, returns 0 otherwise
     def status(self):
         screen = screenshot()
         for y in range(self.boxes_vertical):
@@ -43,10 +41,10 @@ class GoogleBoard(Game):
                 pos = self.get_mouse_position(x, y)
                 pixel = screen.getpixel(pos)
                 if near_same_color(pixel, google_colors["results"], 10):
-                    return 2
+                    return 1
         return 0
 
-    def get_board() -> Optional[Type["GoogleBoard"]]: 
+    def get_board(): 
         im = screenshot()
         top_left = find_top_left(im)
         if not top_left:
@@ -109,7 +107,7 @@ google_colors = {
     "one": [(25, 118, 210), (24, 118, 210), (11, 113, 213)],
     "two": [(55, 141, 59), (78, 148, 72)],
     "three": [(211, 47, 47), (210, 41, 43)],
-    "four": [(119, 16, 162), (121, 29, 162)],
+    "four": [(123, 31, 162), (134, 49, 164)],
     "five": [(255, 139, 0)],
     "six": [(30, 157, 169)]
     # TODO: Add 7 and 8
