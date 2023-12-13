@@ -32,21 +32,21 @@ def solver():
     elif game_status == 3:
         print("No more moves can be found...")
 
-def do_move(game: Game, flags=False, verbose=False, delay=0) -> int:
+def do_move(game: Game, flags=False, verbose=False, delay=None) -> int:
+    if delay is None:
+        delay = game.delay
+
+    print(delay)
+
     # Move Setup
     virtual_board = game.virtual_board
     virtual_board.solve_tiles()
 
     # Execute next move
-    moves = None
-    tries = 0
-    while not moves and tries < MAX_RETRIES:
-        curr_delay = 1 if tries else  delay / 1000
-        time.sleep(curr_delay)
-        pyautogui.moveTo(1, 1)
-        game.update()
-        moves = get_next_moves(virtual_board)
-        tries += 1
+    pyautogui.moveTo(1, 1)
+    time.sleep(delay)
+    game.update()
+    moves = get_next_moves(virtual_board)
     if not moves:
         return 3
     for move in moves:
@@ -72,7 +72,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("type", help="The Minesweeper game type", choices=["google"])
     parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_true")
     parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
-    parser.add_argument("-d", "--delay", help="Delay in milliseconds before each next move (can help with boards with animations)", type=int, default=0)
+    parser.add_argument("-d", "--delay", help="Override delay in seconds before each next move (WARNING: Can break on certain games)", type=int)
 
     return parser.parse_args()
 
