@@ -1,7 +1,7 @@
 import argparse
 import logging
 import time
-from games.game import Game
+from games.game import Game, Status
 from board.ai import Action, get_next_moves
 from games.game_factory import game_factory
 
@@ -21,25 +21,25 @@ def solver():
 
     game_status = do_move(game, flags=args.flags, delay=args.delay)
 
-    while game_status == 0:
+    while game_status == Status.INPROGRESS:
         game_status = do_move(game, flags=args.flags, delay=args.delay)
 
     game.board.print()
-    if game_status == 1:
+    if game_status == Status.LOST:
         print("Game Over...")
-    elif game_status == 2:
+    elif game_status == Status.WON:
         print("I win!")
-    elif game_status == 3:
+    elif game_status == Status.STUCK:
         print("No more moves can be found...")
 
-def do_move(game: Game, flags=False, delay=None) -> int:
+def do_move(game: Game, flags=False, delay=None) -> Status:
     time.sleep(delay if delay is not None else game.delay)
     
     game.update()
     logging.info("Getting next moves...")
     moves = get_next_moves(game.board)
     if not moves:
-        return 3
+        return Status.STUCK
     
     for move in moves:
         board_x, board_y, action = move

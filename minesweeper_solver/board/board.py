@@ -94,5 +94,5 @@ class Board:
     def print(self):
         for row in self.board:
             for tile in row:
-                print("-" if tile.value is None else "M" if tile.value == -1 else tile.value, end=" ")    
+                print("-" if tile.value is None else "F" if tile.value == -1 else tile.value, end=" ")    
             print()

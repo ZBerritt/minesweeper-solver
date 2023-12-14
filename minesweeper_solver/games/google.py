@@ -1,6 +1,6 @@
 from PIL import Image
 import pyautogui
-from games.game import Game
+from games.game import Game, Status
 from utils.game import get_box_mouse_position, tile_range
 from utils.screenshot import screenshot
 from utils.helpers import near_same_color
@@ -13,6 +13,7 @@ class GoogleBoard(Game):
         self.box_dimensions = box_dimensions
         
     def update(self):
+        pyautogui.move(1, 1)
         screen = screenshot()
         tiles = self.board.get_undiscovered_tiles()
         for tile in tiles:
@@ -52,8 +53,8 @@ class GoogleBoard(Game):
                 pos = get_box_mouse_position(self.position, self.box_dimensions, (x, y))
                 pixel = screen.getpixel(pos)
                 if near_same_color(pixel, google_colors["results"], 10):
-                    return 1
-        return 0
+                    return Status.LOST
+        return Status.INPROGRESS
 
     def get_board(): 
         im = screenshot()

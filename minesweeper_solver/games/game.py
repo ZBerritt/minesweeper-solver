@@ -1,8 +1,7 @@
 from __future__ import annotations
 from abc import abstractmethod, ABC
-from PIL import Image
+from enum import Enum
 from board.board import Board
-from utils.screenshot import screenshot
 
 """
 Game: Represents and arbitrary game board that is shown on the screen
@@ -22,14 +21,9 @@ class Game(ABC):
     @abstractmethod
     def update(self):
         pass
-            
-    @abstractmethod
-    def tile_value(self, x: int, y: int, screen: Image) -> int:
-        pass
     
-    # Returns 1 if a loss is detected, returns 2 if a win is detected, returns 0 otherwise
     @abstractmethod
-    def status(self) -> int:
+    def status(self) -> Status:
         pass
 
     @abstractmethod
@@ -43,3 +37,9 @@ class Game(ABC):
     @abstractmethod
     def click_action(self, x, y):
         pass
+
+class Status(Enum):
+    INPROGRESS = 0
+    LOST = 1
+    WON = 2
+    STUCK = 3
