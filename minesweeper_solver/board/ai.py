@@ -1,6 +1,6 @@
 import random
 from enum import Enum
-from board.board import Board
+from board.board import Board, FLAGGED
 class Action(Enum):
     CLICK = 1
     FLAG = 0
@@ -14,15 +14,16 @@ def get_next_moves(board: Board) -> set[tuple[int, int, Enum]]:
 
 def recursive_moves(board: Board, result_moves: set[tuple[int, int, Enum]]) -> set[tuple[int, int, Enum]]:
     basic_moves = basic_algorithm(board)
-    if basic_moves.union(result_moves) == result_moves:
+    combined_moves = basic_moves.union(result_moves)
+    if combined_moves == result_moves:
         return result_moves
 
     for move in basic_moves:
         x, y, action = move
         if action == Action.FLAG:
-            board.set_mine(x, y)
+            board.set_value(x, y, FLAGGED)
 
-    return recursive_moves(board, basic_moves.union(result_moves))
+    return recursive_moves(board, combined_moves)
 
 def get_random_move(board: Board) -> set:
     moves = set()
