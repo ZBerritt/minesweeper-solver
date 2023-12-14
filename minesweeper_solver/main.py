@@ -1,7 +1,6 @@
 import argparse
 import logging
 import time
-import pyautogui
 from games.game import Game
 from board.ai import Action, get_next_moves
 from games.game_factory import game_factory
@@ -34,22 +33,22 @@ def solver():
         print("No more moves can be found...")
 
 def do_move(game: Game, flags=False, delay=None) -> int:
-    pyautogui.moveTo(1, 1)
     time.sleep(delay if delay is not None else game.delay)
+    
     game.update()
-    logging.info("Getting next move...")
+    logging.info("Getting next moves...")
     moves = get_next_moves(game.board)
     if not moves:
         return 3
+    
     for move in moves:
         board_x, board_y, action = move
-        screen_x, screen_y = game.get_mouse_position(board_x, board_y)
         logging.info(f"({board_x}, {board_y}) - {'Mine' if action == Action.FLAG else 'Safe'}")
-            
         if action == Action.CLICK:
-            pyautogui.click(x=screen_x, y=screen_y, button="left")
+            game.click_action(board_x, board_y)
         elif action == Action.FLAG and flags:
-            pyautogui.click(x=screen_x, y=screen_y, button="right")
+            game.flag_action(board_x, board_y)
+            
     return game.status()
 
 def parse_args() -> argparse.Namespace:
@@ -57,7 +56,7 @@ def parse_args() -> argparse.Namespace:
         prog="Minesweeper Solver",
         description="A bot for solving the game minesweeper"
     )
-    parser.add_argument("type", help="The Minesweeper game type", choices=["google"])
+    parser.add_argument("type", help="The Minesweeper game type", choices=["google", "virtual"])
     parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_const", dest="loglevel", const=logging.INFO)
     parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
     parser.add_argument("-d", "--delay", help="Override delay in seconds before each move (WARNING: Can break on certain games)", type=int)

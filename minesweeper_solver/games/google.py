@@ -1,15 +1,26 @@
 from PIL import Image
+import pyautogui
 from games.game import Game
+from utils.game import get_box_mouse_position, tile_range
 from utils.screenshot import screenshot
 from utils.helpers import near_same_color
 
 class GoogleBoard(Game):
-    def __init__(self, top_left, board_dimensions, box_dimensions):
-        super().__init__("Google", top_left, board_dimensions, box_dimensions, 1)
+    def __init__(self, position: tuple[int, int], board_dimensions: tuple[int, int], box_dimensions: tuple[int, int]):
+        super().__init__("Google", int(board_dimensions[0] / box_dimensions[0]),  int(board_dimensions[1] / box_dimensions[1]), 1)
+        self.position = position
+        self.board_dimensions = board_dimensions
+        self.box_dimensions = box_dimensions
+        
+    def update(self):
+        screen = screenshot()
+        tiles = self.board.get_undiscovered_tiles()
+        for tile in tiles:
+            self.board.set_value(tile.x, tile.y, self.tile_value(tile.x, tile.y, screen))
 
     def tile_value(self, x: int, y: int, screen: Image) -> int:
-        positions = self.tile_range(x, y)
-        mid_pixel = screen.getpixel(self.get_mouse_position(x, y))
+        positions = tile_range(self.position, self.box_dimensions, (x, y))
+        mid_pixel = screen.getpixel(get_box_mouse_position(self.position, self.box_dimensions, (x, y)))
         tile_area = screen.crop((positions[0][0], positions[1][0], positions[0][1], positions[1][1]))
         unique_colors = tile_area.getcolors(tile_area.size[0] * tile_area.size[1])
         for c in unique_colors:
@@ -38,7 +49,7 @@ class GoogleBoard(Game):
         screen = screenshot()
         for y in range(self.boxes_vertical):
             for x in range(self.boxes_horizontal):
-                pos = self.get_mouse_position(x, y)
+                pos = get_box_mouse_position(self.position, self.box_dimensions, (x, y))
                 pixel = screen.getpixel(pos)
                 if near_same_color(pixel, google_colors["results"], 10):
                     return 1
@@ -61,6 +72,14 @@ class GoogleBoard(Game):
         board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
         box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
         return GoogleBoard(top_left, board_dimensions, box_dimensions)
+    
+    def click_action(self, x, y):
+        screen_x, screen_y = get_box_mouse_position(self.position, self.box_dimensions, (x, y))
+        pyautogui.click(x=screen_x, y=screen_y, button="left")
+    
+    def flag_action(self, x, y):
+        screen_x, screen_y = get_box_mouse_position(self.position, self.box_dimensions, (x, y))
+        pyautogui.click(x=screen_x, y=screen_y, button="right")
 
 def find_top_left(image: Image) -> tuple[int, int]:
     for y in range(image.height):
