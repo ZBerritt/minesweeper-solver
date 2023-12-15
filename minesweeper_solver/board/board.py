@@ -1,12 +1,13 @@
 # Virtual minesweeper board derived from the browser for simulating and calculations
 from dataclasses import dataclass
+from typing import Optional
 
 FLAGGED = -1
 @dataclass
 class Tile:
     x: int
     y: int
-    value: int
+    value: Optional[int]
 
 class Board:
     def __init__(self, horizontal_tiles: int, vertical_tiles: int):
