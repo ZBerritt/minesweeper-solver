@@ -25,12 +25,10 @@ class VirtualBoard(Game):
                         
     
     def status(self) -> Status:
-        for row in self.internal_board:
-            for tile in row:
-                if tile.mine and tile.clicked:
-                    return Status.LOST
-                if not tile.mine and not tile.clicked:
-                    return Status.INPROGRESS
+        if (any(self.internal_board[y][x].mine and self.internal_board[y][x].clicked for x in range(WIDTH) for y in range(HEIGHT))):
+            return Status.LOST
+        if (any(not self.internal_board[y][x].mine and not self.internal_board[y][x].clicked for x in range(WIDTH) for y in range(HEIGHT))):
+            return Status.INPROGRESS
         return Status.WON
 
     def get_board() -> Game:
@@ -54,6 +52,8 @@ class VirtualBoard(Game):
             visited.add((curr_x, curr_y))
         
             self.internal_board[curr_y][curr_x].clicked = True
+            if self.internal_board[curr_y][curr_x].mine:
+                return
             value = self.tile_value(curr_x, curr_y)
             
             if value == 0:
