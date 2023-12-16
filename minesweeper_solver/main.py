@@ -19,10 +19,10 @@ def solver():
     print(f"{game.name} board detected! Beginning solver.")
     print("Note: To escape, move your cursor to the top-left corner of your screen")
 
-    game_status = do_move(game, flags=args.flags, delay=args.delay)
+    game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess)
 
     while game_status == Status.INPROGRESS:
-        game_status = do_move(game, flags=args.flags, delay=args.delay)
+        game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess)
 
     game.board.print()
     if game_status == Status.LOST:
@@ -32,12 +32,12 @@ def solver():
     elif game_status == Status.STUCK:
         print("No more moves can be found...")
 
-def do_move(game: Game, flags=False, delay=None) -> Status:
+def do_move(game: Game, flags=False, delay=None, no_guess=False) -> Status:
     time.sleep(delay if delay is not None else game.delay)
     
     game.update()
     logging.info("Getting next moves...")
-    moves = get_next_moves(game.board)
+    moves =  get_next_moves(game.board, no_guess) 
     if not moves:
         return Status.STUCK
     
@@ -56,11 +56,11 @@ def parse_args() -> argparse.Namespace:
         prog="Minesweeper Solver",
         description="A bot for solving the game minesweeper"
     )
-    parser.add_argument("type", help="The Minesweeper game type", choices=["google", "virtual-easy", "virtual-medium", "virtual-hard"])
-    parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_const", dest="loglevel", const=logging.INFO)
-    parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
+    parser.add_argument("type", help="The Minesweeper game type to solve", choices=["google", "virtual-easy", "virtual-medium", "virtual-hard"])
     parser.add_argument("-d", "--delay", help="Override delay in seconds before each move (WARNING: Can break on certain games)", type=int)
-
+    parser.add_argument("-ng", "--no-guess", help="Disable any guessing from the AI, only 100%% sure moves are executed", action="store_true")
+    parser.add_argument("-f", "--flags", help="Send command to flag detected mines", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Show extra logging", action="store_const", dest="loglevel", const=logging.INFO)
     return parser.parse_args()
 
 if __name__ == "__main__":

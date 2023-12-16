@@ -6,13 +6,16 @@ class Action(Enum):
     FLAG = 0
 
 # Returns - Set of (x, y, action)
-def get_next_moves(board: Board) -> set[tuple[int, int, Action]]:
+def get_next_moves(board: Board, no_guess=True) -> set[tuple[int, int, Action]]:
     if all(tile.value == None for tile in board.get_all_tiles()):
         return get_random_move(board)
     
-    return recursive_moves(board, set())
+    moves = basic_recursive_moves(board, set())
+    if not moves and not no_guess:
+        moves = prob_algorithm(board)
+    return moves
 
-def recursive_moves(board: Board, result_moves: set[tuple[int, int, Enum]]) -> set[tuple[int, int, Enum]]:
+def basic_recursive_moves(board: Board, result_moves: set[tuple[int, int, Enum]]) -> set[tuple[int, int, Enum]]:
     basic_moves = basic_algorithm(board)
     combined_moves = basic_moves.union(result_moves)
     if combined_moves == result_moves:
@@ -23,7 +26,7 @@ def recursive_moves(board: Board, result_moves: set[tuple[int, int, Enum]]) -> s
         if action == Action.FLAG:
             board.set_value(x, y, FLAGGED)
 
-    return recursive_moves(board, combined_moves)
+    return basic_recursive_moves(board, combined_moves)
 
 def get_random_move(board: Board) -> set:
     moves = set()
