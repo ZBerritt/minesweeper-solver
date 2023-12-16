@@ -28,7 +28,7 @@ class VirtualTile:
 
 # Tile - (value: int, discovered: bool)
 class VirtualBoard(Game):
-    def __init__(self, difficulty):
+    def __init__(self, difficulty: str):
         selected = difficulties[difficulty]
         super().__init__("Virtual", selected["width"], selected["height"], 0)
         self.mines = selected["mines"]
@@ -53,8 +53,8 @@ class VirtualBoard(Game):
         else:
             return Status.WON
 
-    def get_board() -> Game:
-        return VirtualBoard()
+    def get_board(difficulty: str) -> Game:
+        return VirtualBoard(difficulty)
     
     def flag_action(self, x, y):
         pass

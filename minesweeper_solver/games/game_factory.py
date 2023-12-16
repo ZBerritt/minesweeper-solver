@@ -7,9 +7,9 @@ def game_factory(type: str) -> Optional[Game]:
     if type == "google":
         return GoogleBoard.get_board()
     if type == "virtual-easy":
-        return VirtualBoard("easy")
+        return VirtualBoard.get_board("easy")
     if type == "virtual-medium":
-        return VirtualBoard("medium")
+        return VirtualBoard.get_board("medium")
     if type == "virtual-hard":
-        return VirtualBoard("hard")
+        return VirtualBoard.get_board("hard")
     return None
