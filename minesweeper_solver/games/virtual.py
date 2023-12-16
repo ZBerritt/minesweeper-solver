@@ -62,7 +62,7 @@ class VirtualBoard(Game):
 
     def create_board(self, start_x, start_y):
         board_coordinates = [(x, y) for x in range(WIDTH) for y in range(HEIGHT) 
-                             if (x, y) not in self.get_surrounding_tiles(start_x, start_y)]
+                             if (x, y) != (start_x, start_y) and (x, y) not in self.get_surrounding_tiles(start_x, start_y)]
         mine_coordinates = random.sample(board_coordinates, MINES)
         self.internal_board = [[VirtualTile((x, y) in mine_coordinates, False)
                                 for x in range(WIDTH)] for y in range(HEIGHT)]
