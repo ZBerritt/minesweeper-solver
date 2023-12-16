@@ -20,22 +20,16 @@ class VirtualBoard(Game):
     def update(self):
         for y, row in enumerate(self.internal_board):
             for x, tile in enumerate(row):
-                if tile.clicked and tile.mine:
-                    print("Oh no you get zero coins!")
                 if tile.clicked and not tile.mine:
-                    num = sum(1 for coords in self.get_surrounding_tiles(x, y) 
-                              if self.internal_board[coords[1]][coords[0]].mine)
-                    self.board.set_value(x, y, num)
+                    self.board.set_value(x, y, self.tile_value(x, y))
                         
     
     def status(self) -> Status:
-        if not self.internal_board:
-            return Status.INPROGRESS
         for row in self.internal_board:
             for tile in row:
                 if tile.mine and tile.clicked:
                     return Status.LOST
-                if not tile.clicked:
+                if not tile.mine and not tile.clicked:
                     return Status.INPROGRESS
         return Status.WON
 
@@ -48,7 +42,23 @@ class VirtualBoard(Game):
     def click_action(self, x, y):
         if not self.internal_board:
             self.create_board(x, y)
-        self.internal_board[y][x].clicked = True
+            
+        stack = [(x, y)]
+        visited = set()
+        while stack:
+            curr_x, curr_y = stack.pop()
+            
+            if (curr_x, curr_y) in visited:
+                continue
+            
+            visited.add((curr_x, curr_y))
+        
+            self.internal_board[curr_y][curr_x].clicked = True
+            value = self.tile_value(curr_x, curr_y)
+            
+            if value == 0:
+                surrounding = self.get_surrounding_tiles(x, y)
+                stack.extend(surrounding)
 
     def create_board(self, start_x, start_y):
         board_coordinates = [(x, y) for x in range(WIDTH) for y in range(HEIGHT) 
@@ -57,6 +67,10 @@ class VirtualBoard(Game):
         self.internal_board = [[VirtualTile((x, y) in mine_coordinates, False)
                                 for x in range(WIDTH)] for y in range(HEIGHT)]
 
+    def tile_value(self, x, y) -> int:
+        return sum(1 for coords in self.get_surrounding_tiles(x, y) 
+                              if self.internal_board[coords[1]][coords[0]].mine)
+        
     def get_surrounding_tiles(self, x, y) -> list[tuple[int, int]]:
         tiles = []
         positions = [
