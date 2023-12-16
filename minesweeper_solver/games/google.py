@@ -72,6 +72,7 @@ class GoogleBoard(Game):
 
         board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
         box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
+        print("Note: To escape, move your cursor to the top-left corner of your screen")
         return GoogleBoard(top_left, board_dimensions, box_dimensions)
     
     def click_action(self, x, y):

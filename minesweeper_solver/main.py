@@ -16,8 +16,7 @@ def solver():
         print("No board could be found! Make sure the app is all on screen.")
         return
 
-    print(f"{game.name} board detected! Beginning solver.")
-    print("Note: To escape, move your cursor to the top-left corner of your screen")
+    print(f"{game.name} board detected! Beginning solver...")
 
     game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess)
 
