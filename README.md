@@ -5,8 +5,16 @@ A CLI bot for beating Minesweeper
 - Google Minesweeper
 - Windows XP (W.I.P.)
 
-## Running
-Simply run the executable in the windows terminal `./minesweeper_solver [game]`
+## Usage
+Simply run the executable in the terminal `./minesweeper_solver [game]`
+
+## Flags
+| **Flag**             | **Description**                                                       | **Default**                |
+|----------------------|-----------------------------------------------------------------------|----------------------------|
+| --delay (-d) [DELAY] | Delay in seconds for bot to execute next move                         | _Depends on the game type_ |
+| --no-guess (-ng)     | Disables guessing, the bot will stop if no certain moves are detected | False                      |
+| --flags (-f)         | Enables flagging possible mines                                       | False                      |
+| --verbose (-v)       | Enable verbose logging                                                | False                      |
 
 ## Building
 Minesweeper Solver uses Nuitka to build for performance purposes **Nuitka currently only supports up to Python 3.11**
