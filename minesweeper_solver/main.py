@@ -56,7 +56,7 @@ def parse_args() -> argparse.Namespace:
         prog="Minesweeper Solver",
         description="A bot for solving the game minesweeper"
     )
-    parser.add_argument("type", help="The Minesweeper game type", choices=["google", "virtual"])
+    parser.add_argument("type", help="The Minesweeper game type", choices=["google", "virtual-easy", "virtual-medium", "virtual-hard"])
     parser.add_argument("-v", "--verbose", help="Show the logs of the solver", action="store_const", dest="loglevel", const=logging.INFO)
     parser.add_argument("-f", "--flags", help="Flag mines", action="store_true")
     parser.add_argument("-d", "--delay", help="Override delay in seconds before each move (WARNING: Can break on certain games)", type=int)

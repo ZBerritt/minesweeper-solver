@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from utils.helpers import surrounding_tiles
+
 FLAGGED = -1
 @dataclass
 class Tile:
@@ -26,27 +28,12 @@ class Board:
 
     def set_value(self, x: int, y: int, value: int) -> bool:
         if self.board[y][x].value != None:
-            return False
+            return
         self.board[y][x].value = value
-        return True
 
     def get_surrounding_tiles(self, tile: Tile) -> list[Tile]:
-        tiles = []
-        positions = [
-            (tile.x - 1, tile.y - 1),  # Above-Left
-            (tile.x, tile.y - 1),      # Above
-            (tile.x + 1, tile.y - 1),  # Above-Right
-            (tile.x + 1, tile.y),      # Right
-            (tile.x + 1, tile.y + 1),  # Bottom-Right
-            (tile.x, tile.y + 1),      # Bottom
-            (tile.x - 1, tile.y + 1),  # Bottom-Left
-            (tile.x - 1, tile.y),      # Left
-        ]
-        for pos in positions:
-            px, py = pos
-            if 0 <= px < self.horizontal_tiles and 0 <= py < self.vertical_tiles:
-                tiles.append(self.get_space(px, py))
-        return tiles
+        surrounding = surrounding_tiles(tile.x, tile.y, self.horizontal_tiles, self.vertical_tiles)
+        return [self.get_space(tile[0], tile[1]) for tile in surrounding]
 
     def get_all_tiles(self) -> list[Tile]:
         return [self.get_space(x, y) for y in range(self.vertical_tiles) for x in range(self.horizontal_tiles)]
@@ -61,7 +48,7 @@ class Board:
     def get_border_tiles(self) -> list[Tile]:
         tiles = []
         for tile in self.get_discovered_tiles():
-            if tile.value is None or tile.value == FLAGGED:
+            if tile.value is None or tile.value == FLAGGED:                                                                                                                                         
                 continue
             surrounding = self.get_surrounding_tiles(tile)
             for adj_tile in surrounding:
