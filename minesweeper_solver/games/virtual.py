@@ -87,9 +87,9 @@ class VirtualBoard(Game):
         self.internal_board = [[VirtualTile((x, y) in mine_coordinates, False)
                                 for x in range(self.boxes_horizontal)] for y in range(self.boxes_vertical)]
 
-    def tile_value(self, x, y) -> int:
+    def tile_value(self, x: int, y: int) -> int:
         return sum(1 for coords in self.get_surrounding_tiles(x, y) 
                               if self.internal_board[coords[1]][coords[0]].mine)
         
-    def get_surrounding_tiles(self, x, y) -> list[tuple[int, int]]:
+    def get_surrounding_tiles(self, x: int, y: int) -> list[tuple[int, int]]:
         return surrounding_tiles(x, y, self.boxes_horizontal, self.boxes_vertical)
