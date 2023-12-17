@@ -1,6 +1,10 @@
 import argparse
 import logging
+import os
+import sys
 import time
+import threading
+import keyboard
 from games.game import Game, Status
 from board.ai import Action, get_next_moves
 from games.game_factory import game_factory
@@ -17,6 +21,7 @@ def solver():
         return
 
     print(f"{game.name} board detected! Beginning solver...")
+    print("Note: To escape, press ESC")
 
     game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess)
 
@@ -62,5 +67,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("-v", "--verbose", help="Show extra logging", action="store_const", dest="loglevel", const=logging.INFO)
     return parser.parse_args()
 
+def on_escape_pressed(e):
+    if e.name == 'esc':
+        print("Exiting solver...")
+        os._exit(1)
+
 if __name__ == "__main__":
-    solver()
+    keyboard.hook(on_escape_pressed)
+    main_thread = threading.Thread(target=solver)
+    main_thread.start()
+    main_thread.join()
