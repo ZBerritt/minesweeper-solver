@@ -59,7 +59,7 @@ class VirtualBoard(Game):
     def flag_action(self, x, y):
         pass
     
-    def click_action(self, x, y):
+    def click_action(self, x: int, y: int):
         if not self.internal_board:
             self.create_board(x, y)
             
@@ -73,11 +73,9 @@ class VirtualBoard(Game):
             
             tile = self.internal_board[curr_y][curr_x]
             tile.clicked = True
-            if tile.mine:
-                return
             
             value = self.tile_value(curr_x, curr_y)
-            if value == 0:
+            if value == 0 and not tile.mine:
                 surrounding = self.get_surrounding_tiles(curr_x, curr_y)
                 stack.extend(surrounding)
 
