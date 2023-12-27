@@ -13,7 +13,7 @@ class GoogleBoard(Game):
         self.box_dimensions = box_dimensions
         
     def update(self):
-        pyautogui.move(1, 1)
+        pyautogui.moveTo(1, 1)
         screen = screenshot()
         tiles = self.board.get_undiscovered_tiles()
         for tile in tiles:
