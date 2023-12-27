@@ -12,31 +12,24 @@ class Tile:
     value: Optional[int]
 
 class Board:
-    def __init__(self, horizontal_tiles: int, vertical_tiles: int):
-        # Generates empty board
-        self.horizontal_tiles = horizontal_tiles
-        self.vertical_tiles = vertical_tiles
-        self.board = [[Tile(x=i, y=j, value=None) for i in range(horizontal_tiles)] for j in range(vertical_tiles)]
-
-    def populate_board(self, values: list[list[int]]):
-        for y, row in enumerate(values):
-            for x, value in enumerate(row):
-                self.set_value(x, y, Tile(value))
+    def __init__(self, width: int, height: int):
+        self.width = width
+        self.height = height
+        self.board = [[Tile(x=i, y=j, value=None) for i in range(width)] for j in range(height)]
 
     def get_space(self, x: int, y: int) -> Tile:
         return self.board[y][x]
 
-    def set_value(self, x: int, y: int, value: int) -> bool:
+    def set_value(self, x: int, y: int, value: int):
         if self.board[y][x].value != None:
             return
         self.board[y][x].value = value
 
     def get_surrounding_tiles(self, tile: Tile) -> list[Tile]:
-        return surrounding_tiles(tile.x, tile.y, 
-                                        self.horizontal_tiles, self.vertical_tiles, lambda x, y: self.get_space(x, y))
+        return surrounding_tiles(tile.x, tile.y, self.width, self.height, lambda x, y: self.get_space(x, y))
 
     def get_all_tiles(self) -> list[Tile]:
-        return [self.get_space(x, y) for y in range(self.vertical_tiles) for x in range(self.horizontal_tiles)]
+        return [self.get_space(x, y) for y in range(self.height) for x in range(self.width)]
 
     def get_undiscovered_tiles(self) -> list[Tile]:
         return [t for t in self.get_all_tiles() if t.value is None]

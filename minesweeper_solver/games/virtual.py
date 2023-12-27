@@ -81,15 +81,15 @@ class VirtualBoard(Game):
 
     def create_board(self, start_x, start_y):
         illegal_tiles = self.get_surrounding_tiles(start_x, start_y) + [(start_x, start_y)]
-        board_coordinates = [(x, y) for x in range(self.boxes_horizontal) for y in range(self.boxes_vertical)]
+        board_coordinates = [(x, y) for x in range(self.width) for y in range(self.height)]
         possible_mine_coordinates = [coords for coords in board_coordinates if coords not in illegal_tiles]
         mine_coordinates = random.sample(possible_mine_coordinates, self.mines)
         self.internal_board = [[VirtualTile((x, y) in mine_coordinates, False)
-                                for x in range(self.boxes_horizontal)] for y in range(self.boxes_vertical)]
+                                for x in range(self.width)] for y in range(self.height)]
 
     def tile_value(self, x: int, y: int) -> int:
         return sum(1 for coords in self.get_surrounding_tiles(x, y) 
                               if self.internal_board[coords[1]][coords[0]].mine)
         
     def get_surrounding_tiles(self, x: int, y: int) -> list[tuple[int, int]]:
-        return surrounding_tiles(x, y, self.boxes_horizontal, self.boxes_vertical, lambda x, y: (x, y))
+        return surrounding_tiles(x, y, self.width, self.height, lambda x, y: (x, y))

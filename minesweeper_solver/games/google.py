@@ -7,7 +7,9 @@ from utils.helpers import near_same_color
 
 class GoogleBoard(Game):
     def __init__(self, position: tuple[int, int], board_dimensions: tuple[int, int], box_dimensions: tuple[int, int]):
-        super().__init__("Google", int(board_dimensions[0] / box_dimensions[0]),  int(board_dimensions[1] / box_dimensions[1]), 1)
+        width = int(board_dimensions[0] / box_dimensions[0])
+        height = int(board_dimensions[1] / box_dimensions[1])
+        super().__init__("Google", width, height, 1)
         self.position = position
         self.board_dimensions = board_dimensions
         self.box_dimensions = box_dimensions
@@ -48,8 +50,8 @@ class GoogleBoard(Game):
 
     def status(self):
         screen = screenshot()
-        for y in range(self.boxes_vertical):
-            for x in range(self.boxes_horizontal):
+        for y in range(self.height):
+            for x in range(self.width):
                 pos = get_box_mouse_position(self.position, self.box_dimensions, (x, y))
                 pixel = screen.getpixel(pos)
                 if near_same_color(pixel, google_colors["results"], 10):

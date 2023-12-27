@@ -5,17 +5,17 @@ from board.board import Board
 
 """
 Game: Represents and arbitrary game board that is shown on the screen
-- boxes_horizontal: Number of boxes in the x direction
-- boxes_vertical: Number of boxes in the y direction
+- width: Number of boxes in the x direction
+- height: Number of boxes in the y direction
 - delay: Default number of seconds to delay the next move
 """
 class Game(ABC):
-    def __init__(self, name: str, boxes_horizontal: int, boxes_vertical: int, delay: int):
+    def __init__(self, name: str, width: int, height: int, delay: int):
         self.name = name
-        self.boxes_horizontal = boxes_horizontal
-        self.boxes_vertical = boxes_vertical
+        self.width = width
+        self.height = height
         self.delay = delay
-        self.board = Board(self.boxes_horizontal, self.boxes_vertical)
+        self.board = Board(self.width, self.height)
 
     # Abstracts
     @abstractmethod

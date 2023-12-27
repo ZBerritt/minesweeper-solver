@@ -1,5 +1,6 @@
 import random
 from enum import Enum
+import numpy as np
 from board.board import Board, FLAGGED
 class Action(Enum):
     CLICK = 1
@@ -62,8 +63,7 @@ def prob_algorithm(board: Board) -> set:
             surrounding_mines = board.remaining_nearby_mines(sur_tile)
             if surrounding_mines > 0:
                 probs.append(1 / surrounding_mines)
-
-        avg_prob = sum(probs) / len(probs)
+        avg_prob = np.average(probs)
         if avg_prob > best_prob:    
             best_tile = tile
             best_prob = avg_prob
