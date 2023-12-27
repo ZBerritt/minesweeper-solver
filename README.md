@@ -23,6 +23,7 @@ Minesweeper Solver uses Nuitka to build for performance purposes **Nuitka curren
 2. Move into the directory `cd minesweeper-solver`
 3. Install Requirements using `pip install -r requirements.txt`
 4. Run the build script `python buildscript.py`. This may prompt you to install a C compiler if you don't have one.
+5. Run the executable file: `output/minesweeper-solver.exe`
 
 
 

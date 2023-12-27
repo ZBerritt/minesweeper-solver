@@ -3,7 +3,7 @@ import subprocess
 
 PROGRAM_NAME="minesweeper-solver"
 NAME = "Minesweeper Solver"
-VERSION = "0.2.0"
+VERSION = "0.2.2"
 MAIN_FILE_LOCATION = "minesweeper_solver/main.py"
 NUITKA_COMMAND = "nuitka"
 
@@ -13,7 +13,7 @@ command.append(f"--product-name={NAME}")
 command.append(f"--file-version={VERSION}")
 command.append(f"--output-filename={PROGRAM_NAME}")
 command.append("--output-dir=output")
-command.append("--standalone")
+command.append("--onefile")
 command.append(MAIN_FILE_LOCATION)
 
 subprocess.run(command,  shell=True)
