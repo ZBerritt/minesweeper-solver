@@ -220,4 +220,10 @@ pip-selfcheck.json
 
 ## Nuitka Output Directory
 output/
+
+# My personal files
 test.bat
+profile.bat
+profiling.prof
+minesweeper_solver/profiler.py
+minesweeper_solver/test.py
