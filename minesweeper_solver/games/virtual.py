@@ -92,4 +92,4 @@ class VirtualBoard(Game):
                               if self.internal_board[coords[1]][coords[0]].mine)
         
     def get_surrounding_tiles(self, x: int, y: int) -> list[tuple[int, int]]:
-        return surrounding_tiles(x, y, self.boxes_horizontal, self.boxes_vertical)
+        return surrounding_tiles(x, y, self.boxes_horizontal, self.boxes_vertical, lambda x, y: (x, y))

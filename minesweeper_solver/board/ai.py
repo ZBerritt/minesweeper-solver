@@ -54,20 +54,19 @@ def basic_algorithm(board: Board) -> set:
 
 # Todo - i think this is bugged
 def prob_algorithm(board: Board) -> set:
-    borders = board.get_undiscovered_borders()
-    probabilities = [-1 for _ in borders]
-    for i, tile in enumerate(borders):
-        num_adjacent_mines = 0
-        num_adjacent_unknowns = 0
+    best_tile = None
+    best_prob = -1
+    tiles = board.get_undiscovered_borders()
+    for tile in tiles:
+        probability = -1
         for sur_tile in board.get_surrounding_tiles(tile):
-            if sur_tile.value == -1:
-                num_adjacent_mines += 1
-            elif sur_tile.value is None:
-                num_adjacent_unknowns += 1
+            surrounding_mines = board.remaining_nearby_mines(sur_tile)
+            if surrounding_mines > 0:
+                probability *= 1 / surrounding_mines if probability != -1 else -1 / surrounding_mines
 
-        if num_adjacent_unknowns != 0:
-            probabilities[i] = num_adjacent_mines / num_adjacent_unknowns
-    
-    best_tile = max(zip(borders, probabilities), key=lambda x: x[1], default=(None, -1))[0]
-    return set([(best_tile.x, best_tile.y, Action.CLICK)]) if best_tile else set()
+        if probability > best_prob:    
+            best_tile = tile
+            best_prob = probability
+
+    return set([(best_tile.x, best_tile.y, Action.CLICK)]) if best_tile else get_random_move(board)
     

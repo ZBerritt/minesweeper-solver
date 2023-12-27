@@ -32,8 +32,8 @@ class Board:
         self.board[y][x].value = value
 
     def get_surrounding_tiles(self, tile: Tile) -> list[Tile]:
-        surrounding = surrounding_tiles(tile.x, tile.y, self.horizontal_tiles, self.vertical_tiles)
-        return [self.get_space(tile[0], tile[1]) for tile in surrounding]
+        return surrounding_tiles(tile.x, tile.y, 
+                                        self.horizontal_tiles, self.vertical_tiles, lambda x, y: self.get_space(x, y))
 
     def get_all_tiles(self) -> list[Tile]:
         return [self.get_space(x, y) for y in range(self.vertical_tiles) for x in range(self.horizontal_tiles)]
@@ -46,38 +46,31 @@ class Board:
 
     # Tiles that border any undiscovered tile.
     def get_border_tiles(self) -> list[Tile]:
-        tiles = []
-        for tile in self.get_discovered_tiles():
-            if tile.value is None or tile.value == FLAGGED:                                                                                                                                         
-                continue
+        borders = []
+        filtered_tiles = [tile for tile in self.get_discovered_tiles() if tile.value not in [None, FLAGGED]]
+        for tile in filtered_tiles:
             surrounding = self.get_surrounding_tiles(tile)
-            for adj_tile in surrounding:
-                if adj_tile.value is None:
-                    tiles.append(tile)
-                    break
-        return tiles
+            if any(adj_tile.value is None for adj_tile in surrounding):
+                borders.append(tile)
+        return borders
 
     # Undiscovered tiles that border a known tile
     def get_undiscovered_borders(self) -> list[Tile]:
-        tiles = []
-        all_tiles = self.get_undiscovered_tiles()
-        for tile in all_tiles:
-            if tile.value is not None:
-                continue
+        borders = []
+        filtered_tiles = [tile for tile in self.get_undiscovered_tiles() if tile.value is None]
+        for tile in filtered_tiles:
             surrounding = self.get_surrounding_tiles(tile)
-            for adj_tile in surrounding:
-                if adj_tile.value is not None \
-                        and adj_tile.value != FLAGGED:
-                    tiles.append(tile)
-                    break
-        return tiles
+            if any(adj_tile.value is not None and adj_tile.value != FLAGGED for adj_tile in surrounding):
+                borders.append(tile)
+        return borders
 
     # Remaining # of mines surrounding a space
     def remaining_nearby_mines(self, tile: Tile) -> int:
         if tile.value == 0:
             return 0
         surrounding = self.get_surrounding_tiles(tile)
-        return tile.value - len([m for m in surrounding if m.value == FLAGGED])
+        flagged_surrounding = len([m for m in surrounding if m.value == FLAGGED])
+        return tile.value - flagged_surrounding if tile.value else flagged_surrounding
 
     def print(self):
         for row in self.board:
