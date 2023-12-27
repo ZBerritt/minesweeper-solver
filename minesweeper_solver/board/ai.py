@@ -52,21 +52,21 @@ def basic_algorithm(board: Board) -> set:
                 moves.add((space.x, space.y, Action.CLICK))
     return moves
 
-# Todo - i think this is bugged
 def prob_algorithm(board: Board) -> set:
     best_tile = None
     best_prob = -1
     tiles = board.get_undiscovered_borders()
     for tile in tiles:
-        probability = -1
+        probs = []
         for sur_tile in board.get_surrounding_tiles(tile):
             surrounding_mines = board.remaining_nearby_mines(sur_tile)
             if surrounding_mines > 0:
-                probability *= 1 / surrounding_mines if probability != -1 else -1 / surrounding_mines
+                probs.append(1 / surrounding_mines)
 
-        if probability > best_prob:    
+        avg_prob = sum(probs) / len(probs)
+        if avg_prob > best_prob:    
             best_tile = tile
-            best_prob = probability
+            best_prob = avg_prob
 
     return set([(best_tile.x, best_tile.y, Action.CLICK)]) if best_tile else get_random_move(board)
     
