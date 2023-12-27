@@ -7,7 +7,7 @@ def near_same_color(color: tuple[int, int, int], targets: tuple[int, int, int], 
                and abs(color[1] - target[1]) <= tolerance
                and abs(color[2] - target[2]) <= tolerance for target in targets)
     
-def surrounding_tiles(x: int, y: int, width: int, height: int, predicate: Callable[[int, int], any]):
+def surrounding_tiles(x: int, y: int, width: int, height: int, callback: Callable[[int, int], any]):
     positions = [
         (x - 1, y - 1),  # Above-Left
         (x, y - 1),      # Above
@@ -18,4 +18,4 @@ def surrounding_tiles(x: int, y: int, width: int, height: int, predicate: Callab
         (x - 1, y + 1),  # Bottom-Left
         (x - 1, y),      # Left
     ]
-    return [predicate(px, py) for px, py in positions if 0 <= px < width and 0 <= py < height]
+    return [callback(px, py) for px, py in positions if 0 <= px < width and 0 <= py < height]
