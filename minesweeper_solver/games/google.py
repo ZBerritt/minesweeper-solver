@@ -5,7 +5,7 @@ from utils.game import get_box_mouse_position, tile_range
 from utils.screenshot import screenshot
 from utils.helpers import near_same_color
 
-class GoogleBoard(Game):
+class Google(Game):
     def __init__(self, position: tuple[int, int], board_dimensions: tuple[int, int], box_dimensions: tuple[int, int]):
         width = int(board_dimensions[0] / box_dimensions[0])
         height = int(board_dimensions[1] / box_dimensions[1])
@@ -58,7 +58,7 @@ class GoogleBoard(Game):
                     return Status.LOST
         return Status.INPROGRESS
 
-    def get_board(): 
+    def create(): 
         im = screenshot()
         top_left = find_top_left(im)
         if not top_left:
@@ -74,7 +74,7 @@ class GoogleBoard(Game):
 
         board_dimensions = (bottom_right[0] - top_left[0] + 1, bottom_right[1] - top_left[1] + 1)
         box_dimensions = (box_one_bottom_right[0] - top_left[0] + 1, box_one_bottom_right[1] - top_left[1] + 1)
-        return GoogleBoard(top_left, board_dimensions, box_dimensions)
+        return Google(top_left, board_dimensions, box_dimensions)
     
     def click_action(self, x, y):
         screen_x, screen_y = get_box_mouse_position(self.position, self.box_dimensions, (x, y))

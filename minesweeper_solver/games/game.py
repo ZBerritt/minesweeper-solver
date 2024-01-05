@@ -27,7 +27,7 @@ class Game(ABC):
         pass
 
     @abstractmethod
-    def get_board(self) -> Game:
+    def create(self) -> Game:
         pass
     
     @abstractmethod

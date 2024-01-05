@@ -1,15 +1,15 @@
 from typing import Optional
 from games.game import Game
-from games.google import GoogleBoard
-from games.virtual import VirtualBoard
+from games.google import Google
+from games.virtual import Virtual
 
 def game_factory(type: str) -> Optional[Game]:
     if type == "google":
-        return GoogleBoard.get_board()
+        return Google.create()
     if type == "virtual-easy":
-        return VirtualBoard.get_board("easy")
+        return Virtual.create("easy")
     if type == "virtual-medium":
-        return VirtualBoard.get_board("medium")
+        return Virtual.create("medium")
     if type == "virtual-hard":
-        return VirtualBoard.get_board("hard")
+        return Virtual.create("hard")
     return None
