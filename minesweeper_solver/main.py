@@ -22,10 +22,10 @@ def solver():
     print(f"{game.name} board detected! Beginning solver...")
     print("Note: To escape, press ESC")
 
-    game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess)
+    game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess, print_board=args.print_board)
 
     while game_status == Status.INPROGRESS:
-        game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess)
+        game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess, print_board=args.print_board)
 
     game.board.print()
     if game_status == Status.LOST:
@@ -35,7 +35,7 @@ def solver():
     elif game_status == Status.STUCK:
         print("No more moves can be found...")
 
-def do_move(game: Game, flags=False, delay=None, no_guess=False) -> Status:
+def do_move(game: Game, flags=False, delay=None, no_guess=False, print_board=False) -> Status:
     time.sleep(delay if delay is not None else game.delay)
     
     game.update()
@@ -51,7 +51,9 @@ def do_move(game: Game, flags=False, delay=None, no_guess=False) -> Status:
             game.click_action(board_x, board_y)
         elif action == Action.FLAG and flags:
             game.flag_action(board_x, board_y)
-            
+    
+    if print_board:
+        game.board.print()
     return game.status()
 
 def parse_args() -> argparse.Namespace:
@@ -64,6 +66,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("-ng", "--no-guess", help="Disable any guessing from the AI, only 100%% sure moves are executed", action="store_true")
     parser.add_argument("-f", "--flags", help="Send command to flag detected mines", action="store_true")
     parser.add_argument("-v", "--verbose", help="Show extra logging", action="store_const", dest="loglevel", const=logging.INFO)
+    parser.add_argument("-p", "--print-board", help="Prints the current board after every set of moves", action="store_true")
     return parser.parse_args()
 
 def on_escape_pressed(e):

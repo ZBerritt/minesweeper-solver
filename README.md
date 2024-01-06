@@ -15,6 +15,7 @@ Simply run the executable in the terminal `./minesweeper_solver [game]`
 | --no-guess (-ng)     | Disables guessing, the bot will stop if no certain moves are detected | False                      |
 | --flags (-f)         | Enables flagging possible mines                                       | False                      |
 | --verbose (-v)       | Enable verbose logging                                                | False                      |
+| --print-board (-p)   | Prints the current board after every set of moves                     | False                      |
 
 ## Building
 Minesweeper Solver uses Nuitka to build for performance purposes **Nuitka currently only supports up to Python 3.11**

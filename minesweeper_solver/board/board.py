@@ -1,5 +1,6 @@
 # Virtual minesweeper board derived from the browser for simulating and calculations
 from dataclasses import dataclass
+import os
 from typing import Optional
 
 from utils.helpers import surrounding_tiles
@@ -66,6 +67,9 @@ class Board:
         return tile.value - flagged_surrounding if tile.value else flagged_surrounding
 
     def print(self):
+        print("\033[H", end="")
+        print("\033[2J", end="")
+        os.system('cls' if os.name == 'nt' else 'clear')
         for row in self.board:
             for tile in row:
                 print("-" if tile.value is None else "F" if tile.value == -1 else tile.value, end=" ")    
