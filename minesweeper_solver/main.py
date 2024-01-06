@@ -27,7 +27,6 @@ def solver():
     while game_status == Status.INPROGRESS:
         game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess, print_board=args.print_board)
 
-    game.board.print()
     if game_status == Status.LOST:
         print("Game Over...")
     elif game_status == Status.WON:
