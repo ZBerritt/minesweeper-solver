@@ -1,9 +1,8 @@
 # Virtual minesweeper board derived from the browser for simulating and calculations
 from dataclasses import dataclass
-import os
 from typing import Optional
 
-from utils.helpers import surrounding_tiles
+from utils.helpers import clear_console, surrounding_tiles
 
 FLAGGED = -1
 @dataclass
@@ -69,8 +68,27 @@ class Board:
     def print(self):
         print("\033[H", end="")
         print("\033[2J", end="")
-        os.system('cls' if os.name == 'nt' else 'clear')
+        clear_console()
         for row in self.board:
             for tile in row:
-                print("-" if tile.value is None else "F" if tile.value == -1 else tile.value, end=" ")    
+                if tile.value is None:
+                    print("-", end=" ")
+                elif tile.value == -1:
+                    print(f"{FLAG_COLOR}F{RESET_COLOR}", end=" ")
+                else:
+                    print(f"{PRINT_COLORS[tile.value]}{tile.value}{RESET_COLOR}", end=" ")
             print()
+            
+PRINT_COLORS = [
+    "\N{ESC}[32m",
+    "\N{ESC}[33m",
+    "\N{ESC}[34m",
+    "\N{ESC}[35m",
+    "\N{ESC}[36m",
+    "\N{ESC}[37m",
+    "\N{ESC}[30m",
+    "\N{ESC}[30m"
+]
+
+FLAG_COLOR = "\N{ESC}[91m"
+RESET_COLOR = "\N{ESC}[0m"

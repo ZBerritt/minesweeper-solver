@@ -1,4 +1,5 @@
 # Is the color given near any target colors
+import os
 from typing import Callable
 
 
@@ -19,3 +20,6 @@ def surrounding_tiles(x: int, y: int, width: int, height: int, callback: Callabl
         (x - 1, y),      # Left
     ]
     return [callback(px, py) for px, py in positions if 0 <= px < width and 0 <= py < height]
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
