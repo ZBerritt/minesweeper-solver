@@ -16,6 +16,7 @@ Simply run the executable in the terminal `./minesweeper_solver [game]`
 | --flags (-f)         | Enables flagging possible mines                                       | False                      |
 | --verbose (-v)       | Enable verbose logging                                                | False                      |
 | --print-board (-p)   | Prints the current board after every set of moves                     | False                      |
+| --algorithm (-a)     | Which algorithm the bot should use                                    | basic                      |
 
 ## Building
 Minesweeper Solver uses Nuitka to build for performance purposes **Nuitka currently only supports up to Python 3.11**

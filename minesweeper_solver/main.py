@@ -5,7 +5,9 @@ import time
 import threading
 import keyboard
 from games.game import Game, Status
-from board.ai import Action, get_next_moves
+from solver.solver_basic import SolverBasic
+from solver.solver_ai import SolverAi
+from solver.solver import Action
 from games.game_factory import game_factory
 
 def solver():
@@ -22,10 +24,10 @@ def solver():
     print(f"{game.name} board detected! Beginning solver...")
     print("Note: To escape, press ESC")
 
-    game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess, print_board=args.print_board)
+    game_status = do_move(game, args)
 
     while game_status == Status.INPROGRESS:
-        game_status = do_move(game, flags=args.flags, delay=args.delay, no_guess=args.no_guess, print_board=args.print_board)
+        game_status = do_move(game, args)
 
     if game_status == Status.LOST:
         print("Game Over...")
@@ -34,12 +36,23 @@ def solver():
     elif game_status == Status.STUCK:
         print("No more moves can be found...")
 
-def do_move(game: Game, flags=False, delay=None, no_guess=False, print_board=False) -> Status:
-    time.sleep(delay if delay is not None else game.delay)
+def do_move(game: Game, args: argparse.Namespace) -> Status:
+    # Init
+    delay = args.delay
+    flags = args.flags if args.flags is not None else False
+    no_guess = args.no_guess if args.no_guess is not None else False
+    print_board = args.print_board if args.print_board is not None else False
     
+    if args.algorithm == "baisc":
+        solver = SolverBasic()
+    elif args.algorithm == "ai":
+        solver = SolverAi()
+    
+    
+    time.sleep(delay if delay is not None else game.delay)
     game.update()
     logging.info("Getting next moves...")
-    moves =  get_next_moves(game.board, no_guess) 
+    moves = solver.get_next_moves(game.board, no_guess) 
     if not moves:
         return Status.STUCK
     
@@ -66,6 +79,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("-f", "--flags", help="Send command to flag detected mines", action="store_true")
     parser.add_argument("-v", "--verbose", help="Show extra logging", action="store_const", dest="loglevel", const=logging.INFO)
     parser.add_argument("-p", "--print-board", help="Prints the current board after every set of moves", action="store_true")
+    parser.add_argument("-a", "--algorithm", help="Which algorithm the bot should use", choices=["basic", "ai"], default="basic")
     return parser.parse_args()
 
 def on_escape_pressed(e):

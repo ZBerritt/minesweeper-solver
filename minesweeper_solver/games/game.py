@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import abstractmethod, ABC
 from enum import Enum
-from board.board import Board
+from solver.board import Board
 
 """
 Game: Represents and arbitrary game board that is shown on the screen

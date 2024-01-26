@@ -1,20 +1,18 @@
 import random
 from enum import Enum
 import numpy as np
-from board.board import Board, FLAGGED
-class Action(Enum):
-    CLICK = 1
-    FLAG = 0
+from solver.board import Board, FLAGGED
+from solver.solver import Action, Solver
 
-# Returns - Set of (x, y, action)
-def get_next_moves(board: Board, no_guess=True) -> set[tuple[int, int, Action]]:
-    if all(tile.value == None for tile in board.get_all_tiles()):
-        return get_random_move(board)
-    
-    moves = basic_recursive_moves(board, set())
-    if not moves and not no_guess:
-        moves = prob_algorithm(board)
-    return moves
+class SolverBasic(Solver):
+    def get_next_moves(board: Board, no_guess=True) -> set[tuple[int, int, Action]]:
+        if all(tile.value == None for tile in board.get_all_tiles()):
+            return get_random_move(board)
+        
+        moves = basic_recursive_moves(board, set())
+        if not moves and not no_guess:
+            moves = prob_algorithm(board)
+        return moves
 
 def basic_recursive_moves(board: Board, result_moves: set[tuple[int, int, Enum]]) -> set[tuple[int, int, Enum]]:
     basic_moves = basic_algorithm(board)

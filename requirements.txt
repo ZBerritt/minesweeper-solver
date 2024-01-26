@@ -1,5 +1,7 @@
-PyAutoGUI==0.9.54
-Pillow==10.1.0
-Nuitka==1.9.4
-NumPy==1.26.2
+pyautogui==0.9.54
+pillow==10.1.0
+nuitka==1.9.4
+numpy==1.26.2
+tensorflow==2.15.0
+matplotlib==3.8.2
 keyboard==0.13.5
